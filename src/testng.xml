@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="Main Suite" verbose="1" >
+    <test name="Test_Fixtures" >
+        <classes>
+            <class name="tests.Test_Fixtures" />
+        </classes>
+    </test>
+</suite>
