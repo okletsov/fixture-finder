@@ -23,6 +23,8 @@ public class BrowserDriver {
             options.addArguments("--window-size=1920,1080");
             this.driver = new ChromeDriver(options);
         } else if (headless.equals("false")){
+            ChromeOptions options = new ChromeOptions();
+            options.addArguments("--window-size=1920,1080");
             this.driver = new ChromeDriver();
         }
         assert driver != null;

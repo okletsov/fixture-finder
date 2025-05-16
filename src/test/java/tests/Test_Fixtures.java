@@ -66,5 +66,13 @@ public class Test_Fixtures  {
     @Test
     public void testFixtures() {
 
+//        Getting necessary classes
+        CommonElements ce = new CommonElements(driver);
+        PopularBets popBets = new PopularBets(driver);
+
+//        Performing UI actions
+        ce.clickRejectCookies();
+        popBets.clickMore();
+
     }
 }
