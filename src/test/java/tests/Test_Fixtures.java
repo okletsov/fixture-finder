@@ -10,6 +10,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class Test_Fixtures  {
 
@@ -73,7 +74,20 @@ public class Test_Fixtures  {
 //        Performing UI actions
         ce.clickRejectCookies();
         popBets.clickMore();
-        popBets.printEvents();
 
+//        Apply phase 1 filters to get events for further evaluation
+        List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();
+
+        if (phaseOneEvents.isEmpty()) {
+            Log.info("Phase 1 evaluation: no events found");
+        } else {
+            for (EventMetadata event: phaseOneEvents) {
+                Log.info("Phase 1 evaluation returned " + phaseOneEvents.size() + " event(s): \n");
+                Log.info("Name: " + event.getEventName());
+                Log.info("Home odds: " + event.getHomeOdds());
+                Log.info("Home clicks: " + event.getHomeClicks());
+                Log.info("Home clicks pct: " + event.getHomeClicksPct()  + "\n");
+            }
+        }
     }
 }

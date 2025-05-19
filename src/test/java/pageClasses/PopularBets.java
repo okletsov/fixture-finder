@@ -1,5 +1,6 @@
 package pageClasses;
 
+import helpers.EventMetadata;
 import helpers.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +12,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PopularBets {
@@ -48,16 +50,18 @@ public class PopularBets {
         } while (eventsAfterMoreClicked < eventsBeforeMoreClicked);
 
         Log.debug(eventsAfterMoreClicked + " events on a page after More button");
-        Log.info("All events loaded. Events found: " + eventsAfterMoreClicked);
+        Log.info("All events loaded. Events found: " + eventsAfterMoreClicked + "\n");
     }
 
-    public void printEvents() {
+    public List<EventMetadata> getPhaseOneEvents() {
 
         Properties prop = new Properties();
         BigDecimal homeOddsMin = prop.getHomeOddsMin();
         BigDecimal homeOddsMax = prop.getHomeOddsMax();
         int homeClicksLimit = prop.getHomeClicks();
         int homeClicksPctLimit = prop.getHomeClicksPct();
+
+        List<EventMetadata> eventsMetadata = new ArrayList<>();
 
         for (WebElement el : events) {
             String eventName = el.findElement(By.xpath("./*[2]")).getText();
@@ -66,20 +70,15 @@ public class PopularBets {
             int homeClicksPct = Integer.parseInt(el.findElement(By.xpath("following-sibling::*[7]")).getText().replace("%", ""));
 
             if(
-                    homeOdds.compareTo(homeOddsMin) > 0
-                    && homeOdds.compareTo(homeOddsMax) < 0
+                    homeOdds.compareTo(homeOddsMin) >= 0
+                    && homeOdds.compareTo(homeOddsMax) <= 0
                     && homeClicks >= homeClicksLimit
                     && homeClicksPct >= homeClicksPctLimit
             ) {
-                Log.info(eventName);
-                Log.info(homeOdds);
-                Log.info(homeClicks);
-                Log.info(homeClicksPct);
+                eventsMetadata.add(new EventMetadata(eventName, homeOdds, homeClicks, homeClicksPct));
             }
-
         }
+
+        return eventsMetadata;
     }
-
-
-
 }
