@@ -73,6 +73,7 @@ public class Test_Fixtures  {
 //        Performing UI actions
         ce.clickRejectCookies();
         popBets.clickMore();
+        popBets.printEvents();
 
     }
 }

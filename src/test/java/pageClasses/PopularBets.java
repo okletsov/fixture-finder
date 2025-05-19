@@ -1,6 +1,6 @@
 package pageClasses;
 
-import helpers.SeleniumMethods;
+import helpers.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
@@ -10,6 +10,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class PopularBets {
@@ -25,6 +26,9 @@ public class PopularBets {
 
     @FindBy(css = "#popular-bets-full .icon__more")
     public WebElement btnMore;
+
+    @FindBy(css = ".table-main td.h-text-left")
+    public List<WebElement> events;
 
     public void clickMore() {
 
@@ -46,5 +50,36 @@ public class PopularBets {
         Log.debug(eventsAfterMoreClicked + " events on a page after More button");
         Log.info("All events loaded. Events found: " + eventsAfterMoreClicked);
     }
+
+    public void printEvents() {
+
+        Properties prop = new Properties();
+        BigDecimal homeOddsMin = prop.getHomeOddsMin();
+        BigDecimal homeOddsMax = prop.getHomeOddsMax();
+        int homeClicksLimit = prop.getHomeClicks();
+        int homeClicksPctLimit = prop.getHomeClicksPct();
+
+        for (WebElement el : events) {
+            String eventName = el.findElement(By.xpath("./*[2]")).getText();
+            BigDecimal homeOdds = new BigDecimal(el.findElement(By.xpath("following-sibling::*[1]/*[1]")).getText());
+            int homeClicks = Integer.parseInt(el.findElement(By.xpath("following-sibling::*[4]")).getText());
+            int homeClicksPct = Integer.parseInt(el.findElement(By.xpath("following-sibling::*[7]")).getText().replace("%", ""));
+
+            if(
+                    homeOdds.compareTo(homeOddsMin) > 0
+                    && homeOdds.compareTo(homeOddsMax) < 0
+                    && homeClicks >= homeClicksLimit
+                    && homeClicksPct >= homeClicksPctLimit
+            ) {
+                Log.info(eventName);
+                Log.info(homeOdds);
+                Log.info(homeClicks);
+                Log.info(homeClicksPct);
+            }
+
+        }
+    }
+
+
 
 }
