@@ -4,16 +4,18 @@ import java.math.BigDecimal;
 
 public class EventMetadata {
 
-    private String eventName;
-    private BigDecimal homeOdds;
-    private int homeClicks;
-    private int homeClicksPct;
+    private final String eventName;
+    private final BigDecimal homeOdds;
+    private final int homeClicks;
+    private final int homeClicksPct;
+    private final String href;
 
-    public EventMetadata(String eventName, BigDecimal homeOdds, int homeClicks, int homeClicksPct) {
+    public EventMetadata(String eventName, BigDecimal homeOdds, int homeClicks, int homeClicksPct, String href) {
         this.eventName = eventName;
         this.homeOdds = homeOdds;
         this.homeClicks = homeClicks;
         this.homeClicksPct = homeClicksPct;
+        this.href = href;
     }
 
     public String getEventName() {
@@ -32,4 +34,7 @@ public class EventMetadata {
         return homeClicksPct;
     }
 
+    public String getHref() {
+        return href;
+    }
 }
