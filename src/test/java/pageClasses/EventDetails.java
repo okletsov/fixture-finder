@@ -12,10 +12,12 @@ public class EventDetails {
     private static final Logger Log = LogManager.getLogger(EventDetails.class.getName());
 
     private final WebDriver driver;
+    private final boolean eventFinished;
 
     public EventDetails(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
+        this.eventFinished = isFinished.getDomAttribute("value").equals("1");
     }
 
     @FindBy(css = ".breadcrumb__ul > :nth-child(2) a")
@@ -31,7 +33,10 @@ public class EventDetails {
     public WebElement isFinished;
 
     @FindBy(id = "js-score")
-    public WebElement score;
+    public WebElement mainScore;
+
+    @FindBy(id = "js-partial")
+    public WebElement detailedScore;
 
     public String getSport() {
         return sport.getText();
@@ -45,9 +50,17 @@ public class EventDetails {
         return league.getText();
     }
 
-    public String getScore() {
-        if (isFinished.getDomAttribute("value").equals("1")) {
-            return score.getText();
+    public String getMainScore() {
+        if (eventFinished) {
+            return mainScore.getText();
+        } else {
+            return null;
+        }
+    }
+
+    public String getDetailedScore() {
+        if (eventFinished) {
+            return detailedScore.getText();
         } else {
             return null;
         }

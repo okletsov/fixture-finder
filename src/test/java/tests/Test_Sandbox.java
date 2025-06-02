@@ -83,7 +83,8 @@ public class Test_Sandbox {
         Log.info("Sport: " + ed.getSport());
         Log.info("Country: " + ed.getCountry());
         Log.info("League: " + ed.getLeague());
-        Log.info("Score: " + ed.getScore());
-        Log.info("Is score null: " + (ed.getScore() == null));
+        Log.info("Main Score: " + ed.getMainScore());
+        Log.info("Is score null: " + (ed.getMainScore() == null));
+        Log.info("Detailed Score: " + ed.getDetailedScore());
     }
 }
