@@ -31,7 +31,7 @@ public class CommonElements {
         SeleniumMethods sm = new SeleniumMethods(driver);
         sm.waitForElement(btnRejectCookies, Duration.ofSeconds(5));
         btnRejectCookies.click();
-
+        sm.waitForElementInvisibility(btnRejectCookies, Duration.ofSeconds(5));
     }
 
 }

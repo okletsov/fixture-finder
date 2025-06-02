@@ -30,6 +30,11 @@ public class SeleniumMethods {
         Log.trace("Element is visible");
     }
 
+    public void waitForElementInvisibility(WebElement element, Duration timeout) {
+        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        wait.until(ExpectedConditions.invisibilityOf(element));
+    }
+
     public boolean isElementPresent(String type, String locator) {
 
         /*

@@ -66,9 +66,12 @@ public class PopularBets {
         for (WebElement el : events) {
             String eventName = el.findElement(By.xpath("./*[2]")).getText();
             BigDecimal homeOdds = new BigDecimal(el.findElement(By.xpath("following-sibling::*[1]/*[1]")).getText());
+            BigDecimal drawOdds = new BigDecimal(el.findElement(By.xpath("following-sibling::*[2]/*[1]")).getText());
+            BigDecimal awayOdds = new BigDecimal(el.findElement(By.xpath("following-sibling::*[3]/*[1]")).getText());
             int homeClicks = Integer.parseInt(el.findElement(By.xpath("following-sibling::*[4]")).getText());
             int homeClicksPct = Integer.parseInt(el.findElement(By.xpath("following-sibling::*[7]")).getText().replace("%", ""));
             String href = el.findElement(By.xpath("./*[2]")).getDomProperty("href");
+            String id = href.substring(0, href.length() - 1).substring(href.substring(0, href.length() - 1).lastIndexOf('/') + 1);
 
             if(
                     homeOdds.compareTo(homeOddsMin) >= 0
@@ -76,7 +79,16 @@ public class PopularBets {
                     && homeClicks >= homeClicksLimit
                     && homeClicksPct >= homeClicksPctLimit
             ) {
-                eventsMetadata.add(new EventMetadata(eventName, homeOdds, homeClicks, homeClicksPct, href));
+                eventsMetadata.add(new EventMetadata(
+                        eventName,
+                        homeOdds,
+                        drawOdds,
+                        awayOdds,
+                        homeClicks,
+                        homeClicksPct,
+                        href,
+                        id
+                ));
             }
         }
 

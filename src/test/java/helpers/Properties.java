@@ -16,6 +16,7 @@ public class Properties {
     private final String databasePassword;
 
     private final String siteUrl;
+    private final String sandboxUrl;
     private final BigDecimal homeOddsMin;
     private final BigDecimal homeOddsMax;
     private final int homeClicks;
@@ -43,6 +44,7 @@ public class Properties {
         this.databasePassword = properties.getProperty("database_password");
 
         this.siteUrl = properties.getProperty("site_url");
+        this.sandboxUrl = properties.getProperty("sandbox_url");
         this.homeOddsMin = new BigDecimal(properties.getProperty("home_odds_min"));
         this.homeOddsMax = new BigDecimal(properties.getProperty("home_odds_max"));
         this.homeClicks = Integer.parseInt(properties.getProperty("home_clicks"));
@@ -57,6 +59,10 @@ public class Properties {
     public String getDatabasePassword() {return databasePassword;}
 
     public String getSiteUrl() {return siteUrl;}
+
+    public String getSandboxUrl() {
+        return sandboxUrl;
+    }
 
     public BigDecimal getHomeOddsMin() {
         return homeOddsMin;
