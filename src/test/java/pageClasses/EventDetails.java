@@ -2,10 +2,13 @@ package pageClasses;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
+import java.util.List;
 
 public class EventDetails {
 
@@ -65,4 +68,35 @@ public class EventDetails {
             return null;
         }
     }
+
+    public String getResult(String href) {
+
+//        Finding web elements with home, draw and away odds
+        String xpath = "//div[@id='js-mutual-table']//*[@href='" + href + "']/parent::*/following-sibling::*[1]//*[contains(@class, 'table-main__odds ')]";
+        List<WebElement> gameOdds = driver.findElements(By.xpath(xpath));
+
+        int oddsWinner = -1;
+        for(int i = 0; i <= gameOdds.size() - 1; i++) {
+            WebElement element = gameOdds.get(i);
+            String classProp = element.getDomAttribute("class");
+
+//            Identifying event outcome index based on the presence of a specific class
+            if (classProp.contains("oddsWinnerBold")) {
+                oddsWinner = i;
+            }
+        }
+
+//        Converting event outcome to string
+        if (oddsWinner == 0) {
+            return "home";
+        } else if (oddsWinner == 1) {
+            return "draw";
+        } else if (oddsWinner == 2) {
+            return "away";
+        } else {
+            return null;
+        }
+    }
+
+
 }
