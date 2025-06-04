@@ -41,6 +41,12 @@ public class EventDetails {
     @FindBy(id = "js-partial")
     public WebElement detailedScore;
 
+    @FindBy(css = "#best-odds-0 > tr")
+    public List<WebElement> oddsList;
+
+    @FindBy(css = "#best-odds-0 > tr [data-pos='1'] .icon__decreasing")
+    public List<WebElement> droppingOdds;
+
     public String getSport() {
         return sport.getText();
     }
@@ -98,5 +104,11 @@ public class EventDetails {
         }
     }
 
+    public int getDroppingOddsCount() {
+        return droppingOdds.size();
+    }
 
+    public int getDroppingOddsPct() {
+        return droppingOdds.size()*100/oddsList.size();
+    }
 }

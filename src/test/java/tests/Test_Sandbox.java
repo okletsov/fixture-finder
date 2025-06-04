@@ -88,5 +88,7 @@ public class Test_Sandbox {
         Log.info("Detailed Score: " + ed.getDetailedScore());
         String href = "/football/georgia/crystalbet-erovnuli-liga-2/locomotive-tbilisi-bolnisi/tMAsIdAM/";
         Log.info("Result: " + ed.getResult(href));
+        Log.info("Dropping odds: " + ed.getDroppingOddsCount());
+        Log.info("Dropping odds pct: " + ed.getDroppingOddsPct());
     }
 }
