@@ -7,6 +7,7 @@ import helpers.SeleniumMethods;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
@@ -90,5 +91,7 @@ public class Test_Sandbox {
         Log.info("Result: " + ed.getResult(href));
         Log.info("Dropping odds: " + ed.getDroppingOddsCount());
         Log.info("Dropping odds pct: " + ed.getDroppingOddsPct());
+        Log.info("Home team name: " + ed.getHomeTeam());
+        Log.info("Last away h2h game: " + ed.getEventDateByEvent(ed.getPlayedAwayH2hEvents().get(0)));
     }
 }

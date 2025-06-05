@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventDetails {
@@ -16,11 +17,13 @@ public class EventDetails {
 
     private final WebDriver driver;
     private final boolean eventFinished;
+    private final String homeTeam;
 
     public EventDetails(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
         this.eventFinished = isFinished.getDomAttribute("value").equals("1");
+        this.homeTeam = homeTeamName.getText();
     }
 
     @FindBy(css = ".breadcrumb__ul > :nth-child(2) a")
@@ -46,6 +49,13 @@ public class EventDetails {
 
     @FindBy(css = "#best-odds-0 > tr [data-pos='1'] .icon__decreasing")
     public List<WebElement> droppingOdds;
+
+    @FindBy(xpath = "//*[@id='homeParticipantIdHeader']/preceding-sibling::div")
+    public WebElement homeTeamName;
+
+//    Note: :not([data-tttid='5']) helps to exclude friendly games
+    @FindBy(css = "#js-mutual-table :not([data-tttid='5']) .head-to-head__row .table-main__participantAway [alt]")
+    List<WebElement> allH2hAwayTeamNames;
 
     public String getSport() {
         return sport.getText();
@@ -110,5 +120,26 @@ public class EventDetails {
 
     public int getDroppingOddsPct() {
         return droppingOdds.size()*100/oddsList.size();
+    }
+
+    public String getHomeTeam() {
+        return this.homeTeam;
+    }
+
+    public List<WebElement> getPlayedAwayH2hEvents() {
+//        Only return events where the team in question played away
+        List<WebElement> narrowedEvents = new ArrayList<>();
+        for (WebElement el: allH2hAwayTeamNames) {
+            if (el.getDomAttribute("alt").equals(homeTeam)) {
+                narrowedEvents.add(el);
+            }
+        }
+        return narrowedEvents;
+    }
+
+    public String getEventDateByEvent(WebElement el) {
+        WebElement date = el.findElement(By.xpath(
+                "parent::*/parent::*/parent::*/preceding-sibling::div[1]/*[@class='mobileHidden']"));
+        return date.getText();
     }
 }
