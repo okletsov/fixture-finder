@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,5 +142,14 @@ public class EventDetails {
         WebElement date = el.findElement(By.xpath(
                 "parent::*/parent::*/parent::*/preceding-sibling::div[1]/*[@class='mobileHidden']"));
         return date.getText();
+    }
+
+    public List<WebElement> getOddsByEvent(WebElement el) {
+        return el.findElements(By.xpath(
+                "parent::*/parent::*/parent::*/following-sibling::*/*/*[@data-odd]"));
+    }
+
+    public BigDecimal getAwayOdds(List<WebElement> eventOdds) {
+        return new BigDecimal(eventOdds.get(2).getText());
     }
 }

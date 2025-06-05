@@ -92,6 +92,7 @@ public class Test_Sandbox {
         Log.info("Dropping odds: " + ed.getDroppingOddsCount());
         Log.info("Dropping odds pct: " + ed.getDroppingOddsPct());
         Log.info("Home team name: " + ed.getHomeTeam());
-        Log.info("Last away h2h game: " + ed.getEventDateByEvent(ed.getPlayedAwayH2hEvents().get(0)));
+        Log.info("Last away h2h game date: " + ed.getEventDateByEvent(ed.getPlayedAwayH2hEvents().get(0)));
+        Log.info("Away odds for last h2h game: " + ed.getAwayOdds(ed.getOddsByEvent(ed.getPlayedAwayH2hEvents().get(0))));
     }
 }
