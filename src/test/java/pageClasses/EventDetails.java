@@ -18,13 +18,13 @@ public class EventDetails {
 
     private final WebDriver driver;
     private final boolean eventFinished;
-    private final String homeTeam;
+    private final String homeTeamName;
 
     public EventDetails(WebDriver driver){
         this.driver = driver;
         PageFactory.initElements(driver, this);
         this.eventFinished = isFinished.getDomAttribute("value").equals("1");
-        this.homeTeam = homeTeamName.getText();
+        this.homeTeamName = homeTeam.findElement(By.xpath("preceding-sibling::div")).getText();
     }
 
     @FindBy(css = ".breadcrumb__ul > :nth-child(2) a")
@@ -51,8 +51,8 @@ public class EventDetails {
     @FindBy(css = "#best-odds-0 > tr [data-pos='1'] .icon__decreasing")
     public List<WebElement> droppingOdds;
 
-    @FindBy(xpath = "//*[@id='homeParticipantIdHeader']/preceding-sibling::div")
-    public WebElement homeTeamName;
+    @FindBy(xpath = "//*[@id='homeParticipantIdHeader']")
+    public WebElement homeTeam;
 
 //    Note: :not([data-tttid='5']) helps to exclude friendly games
     @FindBy(css = "#js-mutual-table :not([data-tttid='5']) .head-to-head__row .table-main__participantAway [alt]")
@@ -123,15 +123,15 @@ public class EventDetails {
         return droppingOdds.size()*100/oddsList.size();
     }
 
-    public String getHomeTeam() {
-        return this.homeTeam;
+    public String getHomeTeamName() {
+        return this.homeTeamName;
     }
 
     public List<WebElement> getPlayedAwayH2hEvents() {
 //        Only return events where the team in question played away
         List<WebElement> narrowedEvents = new ArrayList<>();
         for (WebElement el: allH2hAwayTeamNames) {
-            if (el.getDomAttribute("alt").equals(homeTeam)) {
+            if (el.getDomAttribute("alt").equals(homeTeamName)) {
                 narrowedEvents.add(el);
             }
         }
