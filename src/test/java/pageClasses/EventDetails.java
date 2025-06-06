@@ -19,6 +19,8 @@ public class EventDetails {
     private final WebDriver driver;
     private final boolean eventFinished;
     private final String homeTeamName;
+    private final String homeTeamId;
+    private final String awayTeamId;
     private final int homeLeaguePos;
     private final int awayLeaguePos;
     private final int leagueTeamsCount;
@@ -28,8 +30,8 @@ public class EventDetails {
         PageFactory.initElements(driver, this);
         this.eventFinished = isFinished.getDomAttribute("value").equals("1");
         this.homeTeamName = homeTeam.findElement(By.xpath("preceding-sibling::div")).getText();
-        String homeTeamId = getIdFromHref(homeTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
-        String awayTeamId = getIdFromHref(awayTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
+        this.homeTeamId = getIdFromHref(homeTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
+        this.awayTeamId = getIdFromHref(awayTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
         this.homeLeaguePos = setLeaguePos(homeTeamId);
         this.awayLeaguePos = setLeaguePos(awayTeamId);
         this.leagueTeamsCount = leagueTeams.size();
@@ -196,5 +198,25 @@ public class EventDetails {
 
     public int getAwayLeaguePosPct() {
         return awayLeaguePos*100/leagueTeamsCount;
+    }
+
+    public int getTeamForm(String teamId) {
+        String winsCss = ".glib-participant-" + teamId + " .form-w";
+        String drawsCss = ".glib-participant-" + teamId + " .form-d";
+        String lossesCss = ".glib-participant-" + teamId + " .form-l";
+
+        String wins = String.valueOf(driver.findElements(By.cssSelector(winsCss)).size());
+        String draws = String.valueOf(driver.findElements(By.cssSelector(drawsCss)).size());
+        String losses = String.valueOf(driver.findElements(By.cssSelector(lossesCss)).size());
+
+        return Integer.parseInt(wins + draws + losses);
+    }
+
+    public String getHomeTeamId() {
+        return homeTeamId;
+    }
+
+    public String getAwayTeamId() {
+        return awayTeamId;
     }
 }
