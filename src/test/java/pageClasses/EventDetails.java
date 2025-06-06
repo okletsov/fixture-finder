@@ -226,4 +226,8 @@ public class EventDetails {
         return dateTimeScheduled.getText();
     }
 
+    public int getLeagueGamesPlayed() {
+        String css = ".glib-participant-" + homeTeamId + " .matches_played";
+        return Integer.parseInt(driver.findElement(By.cssSelector(css)).getText());
+    }
 }
