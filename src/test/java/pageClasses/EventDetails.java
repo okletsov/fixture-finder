@@ -70,6 +70,8 @@ public class EventDetails {
     @FindBy(css = "#standingsComponent  tbody > tr")
     public List<WebElement> leagueTeams;
 
+    @FindBy(id = "match-date")
+    public WebElement dateTimeScheduled;
 
 //    Note: :not([data-tttid='5']) helps to exclude friendly games
     @FindBy(css = "#js-mutual-table :not([data-tttid='5']) .head-to-head__row .table-main__participantAway [alt]")
@@ -219,4 +221,9 @@ public class EventDetails {
     public String getAwayTeamId() {
         return awayTeamId;
     }
+
+    public String getDateTimeScheduled() {
+        return dateTimeScheduled.getText();
+    }
+
 }

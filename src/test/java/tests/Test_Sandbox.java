@@ -93,5 +93,6 @@ public class Test_Sandbox {
         Log.info("Away league pos pct: " + ed.getAwayLeaguePosPct());
         Log.info("Home form: " + ed.getTeamForm(ed.getHomeTeamId()));
         Log.info("Away form: " + ed.getTeamForm(ed.getAwayTeamId()));
+        Log.info("DateTime scheduled: " + ed.getDateTimeScheduled());
     }
 }
