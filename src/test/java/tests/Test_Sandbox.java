@@ -1,23 +1,15 @@
 package tests;
 
 import helpers.BrowserDriver;
-import helpers.EventMetadata;
 import helpers.Properties;
-import helpers.SeleniumMethods;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import pageClasses.CommonElements;
 import pageClasses.EventDetails;
-import pageClasses.PopularBets;
-
-import java.time.Duration;
-import java.util.List;
 
 public class Test_Sandbox {
 
@@ -73,12 +65,12 @@ public class Test_Sandbox {
     @Test
     public void testFixtures() {
 
-//        Getting necessary classes
-        CommonElements ce = new CommonElements(driver);
-        EventDetails ed = new EventDetails(driver);
-
 //        Get the page ready
+        CommonElements ce = new CommonElements(driver);
         ce.clickRejectCookies();
+
+//        Getting necessary classes
+        EventDetails ed = new EventDetails(driver);
 
 //        Test UI actions
         Log.info("Sport: " + ed.getSport());
@@ -94,5 +86,10 @@ public class Test_Sandbox {
         Log.info("Home team name: " + ed.getHomeTeamName());
         Log.info("Last away h2h game date: " + ed.getEventDateByEvent(ed.getPlayedAwayH2hEvents().get(0)));
         Log.info("Away odds for last h2h game: " + ed.getAwayOdds(ed.getOddsByEvent(ed.getPlayedAwayH2hEvents().get(0))));
+        Log.info("Home league pos: " + ed.getHomeLeaguePos());
+        Log.info("Away league pos: " + ed.getAwayLeaguePos());
+        Log.info("League teams count: " + ed.getLeagueTeamsCount());
+        Log.info("Home league pos pct: " + ed.getHomeLeaguePosPct());
+        Log.info("Away league pos pct: " + ed.getAwayLeaguePosPct());
     }
 }
