@@ -237,13 +237,12 @@ public class EventDetails {
          */
         int standingsTablesCount = standingsTables.size();
         if (standingsTablesCount == 1) {
-            Log.info("There is 1 standings table, proceeding...");
             return true;
         } else if (standingsTablesCount > 1) {
-            Log.info("Phase 2 evaluation failed: there is more than 1 standings table");
+            Log.info("Phase 2 evaluation failed: there is more than 1 standings table\n");
             return false;
         } else {
-            Log.info("Phase 2 evaluation failed: no standings table found");
+            Log.info("Phase 2 evaluation failed: no standings table found\n");
             return false;
         }
     }
@@ -253,7 +252,7 @@ public class EventDetails {
         List<WebElement> events = getPlayedAwayH2hEvents();
 //        Checking if last h2h game where the team in question played away exists
         if (events.isEmpty()) {
-            Log.info("Phase 2 evaluation failed: no away h2h games for " + homeTeamName);
+            Log.info("Phase 2 evaluation failed: no away h2h games for " + homeTeamName + "\n");
             return false;
         }
 
@@ -265,13 +264,13 @@ public class EventDetails {
         LocalDate oneYearAgo = LocalDate.now().minusYears(1);
 
         if (lastAwayEventDate.isBefore(oneYearAgo)) {
-            Log.info(" Phase 2 evaluation failed: last away h2h game for " + homeTeamName + "was more than a year ago");
+            Log.info(" Phase 2 evaluation failed: last away h2h game for " + homeTeamName + "was more than a year ago\n");
             return false;
         }
 
 //        Checking if odds for the event exist
         if (getOddsByEvent(events.get(0)).isEmpty()) {
-            Log.info("Phase 2 evaluation failed: odds for the last h2h game don't exist");
+            Log.info("Phase 2 evaluation failed: odds for the last h2h game don't exist\n");
             return false;
         }
 
@@ -282,21 +281,21 @@ public class EventDetails {
 //        Checking for the number of teams in a league
         int teamsCount = getLeagueTeamsCount();
         if (teamsCount < 15) {
-            Log.info("Phase 2 evaluation failed: number of teams in the league is " + teamsCount);
+            Log.info("Phase 2 evaluation failed: number of teams in the league is " + teamsCount + "\n");
             return false;
         }
 
 //        Checking for the number of games played
         int gamesPlayed = getLeagueGamesPlayed();
         if (gamesPlayed < 15) {
-            Log.info("Phase 2 evaluation failed: number of games played is " + gamesPlayed);
+            Log.info("Phase 2 evaluation failed: number of games played is " + gamesPlayed + "\n");
             return false;
         }
 
 //        Checking if the game matters
         int roundsInLeague = (teamsCount - 1) * 2;
         if (roundsInLeague - gamesPlayed <= 3) {
-            Log.info("Phase 2 evaluation failed: game might be useless, " + gamesPlayed + "/" + roundsInLeague + "games played");
+            Log.info("Phase 2 evaluation failed: game might be useless, " + gamesPlayed + "/" + roundsInLeague + "games played\n");
             return false;
         }
 

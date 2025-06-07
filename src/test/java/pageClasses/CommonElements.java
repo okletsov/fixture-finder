@@ -23,15 +23,12 @@ public class CommonElements {
         PageFactory.initElements(driver, this);
     }
 
-    @FindBy(css = "#onetrust-reject-all-handler")
-    public WebElement btnRejectCookies;
-
     public void clickRejectCookies() {
 
+        String css = "#onetrust-reject-all-handler";
         SeleniumMethods sm = new SeleniumMethods(driver);
-        sm.waitForElement(btnRejectCookies, Duration.ofSeconds(5));
-        btnRejectCookies.click();
-        sm.waitForElementInvisibility(btnRejectCookies, Duration.ofSeconds(5));
+        sm.waitForElement(By.cssSelector(css), Duration.ofSeconds(5));
+        driver.findElement(By.cssSelector(css)).click();
+        sm.waitForElementInvisibility(By.cssSelector(css), Duration.ofSeconds(5));
     }
-
 }

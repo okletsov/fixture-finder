@@ -23,16 +23,16 @@ public class SeleniumMethods {
         this.driver = driver;
     }
 
-    public void waitForElement (WebElement element, Duration timeout){
+    public void waitForElement (By locator, Duration timeout){
         Log.trace("Waiting for element...");
         WebDriverWait wait = new WebDriverWait(driver, timeout);
-        wait.until(ExpectedConditions.visibilityOf(element));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
         Log.trace("Element is visible");
     }
 
-    public void waitForElementInvisibility(WebElement element, Duration timeout) {
+    public void waitForElementInvisibility(By locator, Duration timeout) {
         WebDriverWait wait = new WebDriverWait(driver, timeout);
-        wait.until(ExpectedConditions.invisibilityOf(element));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     public boolean isElementPresent(String type, String locator) {
