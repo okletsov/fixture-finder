@@ -277,4 +277,29 @@ public class EventDetails {
 
         return true;
     }
+
+    public boolean isStandingsOk() {
+//        Checking for the number of teams in a league
+        int teamsCount = getLeagueTeamsCount();
+        if (teamsCount < 15) {
+            Log.info("Phase 2 evaluation failed: number of teams in the league is " + teamsCount);
+            return false;
+        }
+
+//        Checking for the number of games played
+        int gamesPlayed = getLeagueGamesPlayed();
+        if (gamesPlayed < 15) {
+            Log.info("Phase 2 evaluation failed: number of games played is " + gamesPlayed);
+            return false;
+        }
+
+//        Checking if the game matters
+        int roundsInLeague = (teamsCount - 1) * 2;
+        if (roundsInLeague - gamesPlayed <= 3) {
+            Log.info("Phase 2 evaluation failed: game might be useless, " + gamesPlayed + "/" + roundsInLeague + "games played");
+            return false;
+        }
+
+        return true;
+    }
 }

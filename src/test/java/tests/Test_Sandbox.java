@@ -75,6 +75,7 @@ public class Test_Sandbox {
 //        Test UI actions
         Log.info("Tournament passed evaluation: " + ed.isTournamentOk());
         Log.info("Last h2h game passed evaluation: " + ed.isLastH2hGameOk());
+        Log.info("Standings evaluation: " + ed.isStandingsOk());
         Log.info("Sport: " + ed.getSport());
         Log.info("Country: " + ed.getCountry());
         Log.info("League: " + ed.getLeague());
