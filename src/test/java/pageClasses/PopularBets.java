@@ -76,8 +76,8 @@ public class PopularBets {
             if(
                     homeOdds.compareTo(homeOddsMin) >= 0
                     && homeOdds.compareTo(homeOddsMax) <= 0
-                    && homeClicks >= homeClicksLimit
-                    && homeClicksPct >= homeClicksPctLimit
+//                    && homeClicks >= homeClicksLimit
+//                    && homeClicksPct >= homeClicksPctLimit
             ) {
                 eventsMetadata.add(new EventMetadata(
                         eventName,
