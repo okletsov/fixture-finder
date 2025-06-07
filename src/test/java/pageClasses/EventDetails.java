@@ -9,6 +9,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -244,5 +246,35 @@ public class EventDetails {
             Log.info("Phase 2 evaluation failed: no standings table found");
             return false;
         }
+    }
+
+    public boolean isLastH2hGameOk() {
+
+        List<WebElement> events = getPlayedAwayH2hEvents();
+//        Checking if last h2h game where the team in question played away exists
+        if (events.isEmpty()) {
+            Log.info("Phase 2 evaluation failed: no away h2h games for " + homeTeamName);
+            return false;
+        }
+
+//        Checking if that game was within last year
+        String eventDateString = getEventDateByEvent(events.get(0));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        LocalDate lastAwayEventDate = LocalDate.parse(eventDateString, formatter);
+        LocalDate oneYearAgo = LocalDate.now().minusYears(1);
+
+        if (lastAwayEventDate.isBefore(oneYearAgo)) {
+            Log.info(" Phase 2 evaluation failed: last away h2h game for " + homeTeamName + "was more than a year ago");
+            return false;
+        }
+
+//        Checking if odds for the event exist
+        if (getOddsByEvent(events.get(0)).isEmpty()) {
+            Log.info("Phase 2 evaluation failed: odds for the last h2h game don't exist");
+            return false;
+        }
+
+        return true;
     }
 }
