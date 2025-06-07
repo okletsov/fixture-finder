@@ -73,6 +73,7 @@ public class Test_Sandbox {
         EventDetails ed = new EventDetails(driver);
 
 //        Test UI actions
+        Log.info("League games played: " + ed.isTournamentOk());
         Log.info("Sport: " + ed.getSport());
         Log.info("Country: " + ed.getCountry());
         Log.info("League: " + ed.getLeague());

@@ -21,9 +21,6 @@ public class EventDetails {
     private final String homeTeamName;
     private final String homeTeamId;
     private final String awayTeamId;
-    private final int homeLeaguePos;
-    private final int awayLeaguePos;
-    private final int leagueTeamsCount;
 
     public EventDetails(WebDriver driver){
         this.driver = driver;
@@ -32,9 +29,6 @@ public class EventDetails {
         this.homeTeamName = homeTeam.findElement(By.xpath("preceding-sibling::div")).getText();
         this.homeTeamId = getIdFromHref(homeTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
         this.awayTeamId = getIdFromHref(awayTeam.findElement(By.xpath("parent::*")).getDomProperty("href"));
-        this.homeLeaguePos = setLeaguePos(homeTeamId);
-        this.awayLeaguePos = setLeaguePos(awayTeamId);
-        this.leagueTeamsCount = leagueTeams.size();
     }
 
     @FindBy(css = ".breadcrumb__ul > :nth-child(2) a")
@@ -72,6 +66,9 @@ public class EventDetails {
 
     @FindBy(id = "match-date")
     public WebElement dateTimeScheduled;
+
+    @FindBy(css = "#glib-stats tbody")
+    public List<WebElement> standingsTables;
 
 //    Note: :not([data-tttid='5']) helps to exclude friendly games
     @FindBy(css = "#js-mutual-table :not([data-tttid='5']) .head-to-head__row .table-main__participantAway [alt]")
@@ -176,30 +173,28 @@ public class EventDetails {
         return href.substring(0, href.length() - 1).substring(href.substring(0, href.length() - 1).lastIndexOf('/') + 1);
     }
 
-    private int setLeaguePos(String teamId) {
-        String css = ".glib-participant-" + teamId;
+    public int getHomeLeaguePos() {
+        String css = ".glib-participant-" + homeTeamId;
         int tableOrderIndex = Integer.parseInt(driver.findElement(By.cssSelector(css)).getDomAttribute("data-def-order"));
         return tableOrderIndex + 1;
     }
 
-    public int getHomeLeaguePos() {
-        return homeLeaguePos;
-    }
-
     public int getAwayLeaguePos() {
-        return awayLeaguePos;
+        String css = ".glib-participant-" + awayTeamId;
+        int tableOrderIndex = Integer.parseInt(driver.findElement(By.cssSelector(css)).getDomAttribute("data-def-order"));
+        return tableOrderIndex + 1;
     }
 
     public int getLeagueTeamsCount() {
-        return leagueTeamsCount;
+        return leagueTeams.size();
     }
 
     public int getHomeLeaguePosPct() {
-        return homeLeaguePos*100/leagueTeamsCount;
+        return getHomeLeaguePos()*100/getLeagueTeamsCount();
     }
 
     public int getAwayLeaguePosPct() {
-        return awayLeaguePos*100/leagueTeamsCount;
+        return getAwayLeaguePos()*100/getLeagueTeamsCount();
     }
 
     public int getTeamForm(String teamId) {
@@ -229,5 +224,25 @@ public class EventDetails {
     public int getLeagueGamesPlayed() {
         String css = ".glib-participant-" + homeTeamId + " .matches_played";
         return Integer.parseInt(driver.findElement(By.cssSelector(css)).getText());
+    }
+
+    public boolean isTournamentOk() {
+        /*
+            The condition below makes multiple checks:
+                1. Making sure the standings table exists (number of tables not 0)
+                2. Making sure there are no conferences (number of tables no more than 1)
+                3. Making sure tournament type is not a cup (or the number of tables would be 0)
+         */
+        int standingsTablesCount = standingsTables.size();
+        if (standingsTablesCount == 1) {
+            Log.info("There is 1 standings table, proceeding...");
+            return true;
+        } else if (standingsTablesCount > 1) {
+            Log.info("Phase 2 evaluation failed: there is more than 1 standings table");
+            return false;
+        } else {
+            Log.info("Phase 2 evaluation failed: no standings table found");
+            return false;
+        }
     }
 }
