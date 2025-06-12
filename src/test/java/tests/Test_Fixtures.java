@@ -1,6 +1,8 @@
 package tests;
 
-import helpers.*;
+import databaseHelpers.DatabaseOperations;
+import databaseHelpers.EventOperations;
+import genericHelpers.*;
 import org.openqa.selenium.By;
 import pageClasses.*;
 import org.apache.logging.log4j.LogManager;
@@ -18,8 +20,8 @@ public class Test_Fixtures  {
 
     private static final Logger Log = LogManager.getLogger(Test_Fixtures.class.getName());
 
-//    private final DatabaseOperations dbOp = new DatabaseOperations();
-//    private Connection conn = null;
+    private final DatabaseOperations dbOp = new DatabaseOperations();
+    private Connection conn = null;
     private ChromeDriver driver;
 
     @BeforeSuite
@@ -32,13 +34,13 @@ public class Test_Fixtures  {
                 driver.quit();
                 Log.info("WebDriver closed via shutdown hook.");
             }
-//            if (conn != null) {
-//                dbOp.closeConnection(conn);
-//                Log.info("Database connection closed via shutdown hook.");
-//            }
+            if (conn != null) {
+                dbOp.closeConnection(conn);
+                Log.info("Database connection closed via shutdown hook.");
+            }
         }));
 
-//        conn = dbOp.connectToDatabase();
+        conn = dbOp.connectToDatabase();
 
         // Setting up ChromeDriver
         BrowserDriver bd = new BrowserDriver();
@@ -61,7 +63,7 @@ public class Test_Fixtures  {
 //        bj.addToBackgroundJobLog(jobName);
 
 //        Close connection
-//        dbOp.closeConnection(conn);
+        dbOp.closeConnection(conn);
         
     }
 
@@ -122,7 +124,9 @@ public class Test_Fixtures  {
                         && ed.isLastH2hGameOk()
                 ) {
                     Log.info("Phase 2 evaluation successful!\n");
-                    //TODO: add event to DB
+                    //WIP: add event to DB
+                    EventOperations eo = new EventOperations(conn, event, ed);
+                    eo.addEvent();
                 }
 
 //                Close tab

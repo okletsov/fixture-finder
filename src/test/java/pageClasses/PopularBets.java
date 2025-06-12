@@ -1,7 +1,7 @@
 package pageClasses;
 
-import helpers.EventMetadata;
-import helpers.Properties;
+import genericHelpers.EventMetadata;
+import genericHelpers.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;

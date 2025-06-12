@@ -1,7 +1,8 @@
 package tests;
 
-import helpers.BrowserDriver;
-import helpers.Properties;
+import databaseHelpers.SqlLoader;
+import genericHelpers.BrowserDriver;
+import genericHelpers.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,8 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 import pageClasses.CommonElements;
 import pageClasses.EventDetails;
+
+import java.util.List;
 
 public class Test_Sandbox {
 
@@ -71,6 +74,8 @@ public class Test_Sandbox {
 
 //        Getting necessary classes
         EventDetails ed = new EventDetails(driver);
+        SqlLoader sqlLoader = new SqlLoader("sql/insert_event.sql");
+        List<String> params = sqlLoader.getParamsOrder();
 
 //        Test UI actions
         Log.info("Tournament passed evaluation: " + ed.isTournamentOk());
