@@ -80,11 +80,11 @@ public class Test_Fixtures  {
 
 //        Step 1: Check if saved in DB events are no longer valid
         /*
-            1.1 Get IDs from the DB for not-played events
-            1.2 Search these events on the page
-            1.3 Home odds outside of range?
-                - yes: delete event from the DB
-                - no: do nothing (the event will get inspected in following steps)
+            1.1 Get IDs from the DB for not-played events --> todo
+            1.2 Search these events on the page --> todo
+            1.3 Home odds outside of range? --> todo
+                - yes: delete event from the DB --> todo
+                - no: do nothing (the event will get inspected in following steps) --> done
          */
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
@@ -113,7 +113,7 @@ public class Test_Fixtures  {
                     2.2 Does event already exist in the DB? --> todo
                         - yes: update event's data --> todo
                         - no: phase 2 evaluation passes? -> done
-                            - yes: add event to db --> todo
+                            - yes: add event to db --> done
                             - no: do nothing --> done
                  */
 
@@ -124,7 +124,6 @@ public class Test_Fixtures  {
                         && ed.isLastH2hGameOk()
                 ) {
                     Log.info("Phase 2 evaluation successful!");
-                    //WIP: add event to DB
                     EventOperations eo = new EventOperations(conn, event, ed);
                     eo.addEvent();
                 }
