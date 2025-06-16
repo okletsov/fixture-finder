@@ -139,7 +139,11 @@ public class EventDetails {
     }
 
     public int getDroppingOddsPct() {
-        return droppingOdds.size()*100/oddsList.size();
+        if (!droppingOdds.isEmpty()) {
+            return droppingOdds.size()*100/oddsList.size();
+        } else {
+            return 0;
+        }
     }
 
     public String getHomeTeamName() {
