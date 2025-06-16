@@ -74,8 +74,6 @@ public class Test_Sandbox {
 
 //        Getting necessary classes
         EventDetails ed = new EventDetails(driver);
-        SqlLoader sqlLoader = new SqlLoader("sql/insert_event.sql");
-        List<String> params = sqlLoader.getParamsOrder();
 
 //        Test UI actions
         Log.info("Tournament passed evaluation: " + ed.isTournamentOk());

@@ -6,19 +6,24 @@ import org.apache.logging.log4j.Logger;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 public class SqlLoader {
 
     private static final Logger Log = LogManager.getLogger(SqlLoader.class.getName());
     private static String sql;
+    private static final List<String> paramOrder = new ArrayList<>();
 
     public SqlLoader(String filePath) {
-        parseSql(filePath);
+        readSqlFromFile(filePath);
+        setParamsOrder();
     }
 
-    private void parseSql(String filePath) {
+    private void readSqlFromFile(String filePath) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(filePath)), StandardCharsets.UTF_8))) {
@@ -33,17 +38,29 @@ public class SqlLoader {
         sql = sb.toString().trim();
     }
 
-    public List<String> getParamsOrder() {
-        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile(":(\\w+)").matcher(sql);
-        java.util.List<String> paramNames = new java.util.ArrayList<>();
+    private void setParamsOrder() {
+        Matcher matcher = java.util.regex.Pattern.compile(":(\\w+)").matcher(sql);
         while (matcher.find()) {
-            paramNames.add(matcher.group(1));
+            paramOrder.add(matcher.group(1));
         }
-        return paramNames;
     }
 
-    public String getParsedSql() {
-        return sql.replaceAll(":(\\w+)", "?");
-    }
+    public String getSql(HashMap<String, Object> paramValues) {
+        sql = sql.replaceAll(":(\\w+)", "?");
+        for (String paramName : paramOrder) {
+            Object rawVal = paramValues.get(paramName);
+            String value;
 
+            if (rawVal == null) {
+                value = "NULL";
+            } else if (rawVal instanceof String || rawVal instanceof java.sql.Date || rawVal instanceof java.time.LocalDateTime) {
+                value = "'" + rawVal.toString().replace("'", "''") + "'";
+            } else {
+                value = rawVal.toString();
+            }
+
+            sql = sql.replaceFirst("\\?", value);
+        }
+        return sql;
+    }
 }

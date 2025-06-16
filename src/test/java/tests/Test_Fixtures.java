@@ -101,7 +101,7 @@ public class Test_Fixtures  {
                 Log.info("Url: " + event.getHref());
                 Log.info("Home odds: " + event.getHomeOdds());
                 Log.info("Home clicks: " + event.getHomeClicks());
-                Log.info("Home clicks pct: " + event.getHomeClicksPct()  + "\n");
+                Log.info("Home clicks pct: " + event.getHomeClicksPct());
 
 //                Open event in a new tab
                 SeleniumMethods sm = new SeleniumMethods(driver);
@@ -123,7 +123,7 @@ public class Test_Fixtures  {
                         && ed.isStandingsOk()
                         && ed.isLastH2hGameOk()
                 ) {
-                    Log.info("Phase 2 evaluation successful!\n");
+                    Log.info("Phase 2 evaluation successful!");
                     //WIP: add event to DB
                     EventOperations eo = new EventOperations(conn, event, ed);
                     eo.addEvent();

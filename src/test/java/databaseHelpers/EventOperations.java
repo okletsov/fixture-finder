@@ -5,13 +5,10 @@ import genericHelpers.EventMetadata;
 import genericHelpers.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.openqa.selenium.WebDriver;
 import pageClasses.EventDetails;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.List;
 
 public class EventOperations {
 
@@ -32,10 +29,6 @@ public class EventOperations {
     }
 
     public void addEvent() {
-
-        SqlLoader sqlLoader = new SqlLoader("sql/insert_event.sql");
-        String sql = sqlLoader.getParsedSql();
-        List<String> paramOrder = sqlLoader.getParamsOrder();
 
 //        Getting necessary classes
         DateTimeOperations dtOp = new DateTimeOperations();
@@ -75,25 +68,17 @@ public class EventOperations {
         paramValues.put("strategy_id", prop.getStrategyId());
         paramValues.put("continent", null);
 
-        try {
-            // Create and prepare statement
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+//        Generating sql
+        SqlLoader sqlLoader = new SqlLoader("sql/insert_event.sql");
+        String sql = sqlLoader.getSql(paramValues);
 
-            // Bind parameters in the correct order
-            for (int i = 0; i < paramOrder.size(); i++) {
-                String param = paramOrder.get(i);
-                Object value = paramValues.get(param);
-                pstmt.setObject(i + 1, value);
-            }
-
-            int rowsInserted = pstmt.executeUpdate();
-            System.out.println("Inserted rows: " + rowsInserted);
-
-            pstmt.close();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
+//        Run the insert query
+        ExecuteQuery eq = new ExecuteQuery(conn, sql);
+        if (eq.getRowsAffected() == 1) {
+            Log.info("Event " + eventMetadata.getEventName() + " added to DB\n") ;
+        } else {
+            Log.error("Event was not inserted!\n");
         }
-
+        eq.cleanUp();
     }
 }
