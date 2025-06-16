@@ -15,8 +15,8 @@ public class EventOperations {
     private static final Logger Log = LogManager.getLogger(EventOperations.class.getName());
 
     private final Connection conn;
-    private final EventMetadata eventMetadata;
-    private final EventDetails eventDetails;
+    private EventMetadata eventMetadata = null;
+    private EventDetails eventDetails = null;
 
     public EventOperations(
             Connection conn,
@@ -26,6 +26,12 @@ public class EventOperations {
         this.conn = conn;
         this.eventMetadata = eventMetadata;
         this.eventDetails = eventDetails;
+    }
+
+    public EventOperations(
+            Connection conn
+    ) {
+        this.conn = conn;
     }
 
     public void addEvent() {
@@ -80,5 +86,16 @@ public class EventOperations {
             Log.error("Event was not inserted!\n");
         }
         eq.cleanUp();
+    }
+
+    public String getEventById(String id) {
+        HashMap<String, Object> paramValues = new HashMap<>();
+        paramValues.put("id", id);
+
+        SqlLoader sqlLoader = new SqlLoader("sql/get_event_by_id.sql");
+        String sql = sqlLoader.getSql(paramValues);
+
+        DatabaseOperations dbOp = new DatabaseOperations();
+        return dbOp.getSingleValue(conn, "id", sql);
     }
 }
