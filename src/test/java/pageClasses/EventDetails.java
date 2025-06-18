@@ -301,7 +301,7 @@ public class EventDetails {
 //        Checking if the game matters
         int roundsInLeague = (teamsCount - 1) * 2;
         if (roundsInLeague - gamesPlayed <= 3) {
-            Log.info("Phase 2 evaluation failed: game might be useless, " + gamesPlayed + "/" + roundsInLeague + "games played\n");
+            Log.info("Phase 2 evaluation failed: game might be useless, " + gamesPlayed + "/" + roundsInLeague + " games played\n");
             return false;
         }
 

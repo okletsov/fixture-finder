@@ -99,32 +99,33 @@ public class Test_Fixtures  {
 //                2.1: Print event to be evaluated further
                 Log.info("Name: " + event.getEventName());
                 Log.info("Url: " + event.getHref());
-                Log.info("Home odds: " + event.getHomeOdds());
-                Log.info("Home clicks: " + event.getHomeClicks());
-                Log.info("Home clicks pct: " + event.getHomeClicksPct());
+                Log.info("Odds: " + event.getHomeOdds() + "; Clicks" + event.getHomeClicks() + "; Pct: " + event.getHomeClicksPct());
 
 //                Open event in a new tab
                 SeleniumMethods sm = new SeleniumMethods(driver);
                 sm.openNewTab(event.getHref());
-                sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(5));
+                sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(15));
                 EventDetails ed = new EventDetails(driver);
 
                 /*
-                    2.2 Does event already exist in the DB? --> todo
-                        - yes: update event's data --> todo
-                        - no: phase 2 evaluation passes? -> done
-                            - yes: add event to db --> done
-                            - no: do nothing --> done
+                    2.2 Does event already exist in the DB?
+                        - yes: update event's data
+                        - no: phase 2 evaluation passes?
+                            - yes: add event to db
+                            - no: do nothing
                  */
 
-                Log.info("Starting phase 2 evaluation for " + event.getEventName() + "...");
-                if (
-                        ed.isStandingsOk()
+                EventOperations eo = new EventOperations(conn, event, ed);
+                boolean eventExistsInDb = eo.getEventById(event.getId()) != null;
+
+                if (eventExistsInDb) {
+                    eo.updateEvent();
+                } else if (
+                        ed.isTournamentOk()
                         && ed.isStandingsOk()
                         && ed.isLastH2hGameOk()
                 ) {
                     Log.info("Phase 2 evaluation successful!");
-                    EventOperations eo = new EventOperations(conn, event, ed);
                     eo.addEvent();
                 }
 

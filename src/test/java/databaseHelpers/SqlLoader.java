@@ -15,8 +15,8 @@ import java.util.regex.Matcher;
 public class SqlLoader {
 
     private static final Logger Log = LogManager.getLogger(SqlLoader.class.getName());
-    private static String sql;
-    private static final List<String> paramOrder = new ArrayList<>();
+    private String sql;
+    private final List<String> paramOrder = new ArrayList<>();
 
     public SqlLoader(String filePath) {
         readSqlFromFile(filePath);

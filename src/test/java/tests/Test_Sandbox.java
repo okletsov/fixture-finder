@@ -106,7 +106,7 @@ public class Test_Sandbox {
 //        Log.info("League games played: " + ed.getLeagueGamesPlayed());
 
         EventOperations eo = new EventOperations(conn);
-        String id = eo.getEventById("jqhEH9V21");
-        System.out.println(id);
+        boolean eventExistsInDb = eo.getEventById("jqhEH9V11") != null;
+        System.out.println(eventExistsInDb);
     }
 }

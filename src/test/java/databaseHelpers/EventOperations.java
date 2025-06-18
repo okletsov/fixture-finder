@@ -88,6 +88,35 @@ public class EventOperations {
         eq.cleanUp();
     }
 
+    public void updateEvent() {
+
+        DateTimeOperations dtOp = new DateTimeOperations();
+
+        HashMap<String, Object> paramValues = new HashMap<>();
+        paramValues.put("odds_home", eventMetadata.getHomeOdds());
+        paramValues.put("odds_draw", eventMetadata.getDrawOdds());
+        paramValues.put("odds_away", eventMetadata.getAwayOdds());
+        paramValues.put("home_clicks_count", eventMetadata.getHomeClicks());
+        paramValues.put("home_clicks_pct", eventMetadata.getHomeClicksPct());
+        paramValues.put("dropping_odds_count", eventDetails.getDroppingOddsCount());
+        paramValues.put("dropping_odds_pct", eventDetails.getDroppingOddsPct());
+        paramValues.put("date_updated", dtOp.getTimestamp());
+        paramValues.put("id", eventMetadata.getId());
+
+//        Generating sql
+        SqlLoader sqlLoader = new SqlLoader("sql/update_event_details.sql");
+        String sql = sqlLoader.getSql(paramValues);
+
+//        Run the insert query
+        ExecuteQuery eq = new ExecuteQuery(conn, sql);
+        if (eq.getRowsAffected() == 1) {
+            Log.info("Event " + eventMetadata.getEventName() + " updated!\n") ;
+        } else {
+            Log.error("Event was not updated!\n");
+        }
+        eq.cleanUp();
+    }
+
     public String getEventById(String id) {
         HashMap<String, Object> paramValues = new HashMap<>();
         paramValues.put("id", id);
