@@ -13,6 +13,7 @@ import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -75,6 +76,7 @@ public class Test_Fixtures  {
 //        Getting necessary classes
         CommonElements ce = new CommonElements(driver);
         PopularBets popBets = new PopularBets(driver);
+        Properties prop = new Properties();
 
 //        Get the page ready
         ce.clickRejectCookies();
@@ -83,8 +85,8 @@ public class Test_Fixtures  {
 //        Step 1: Check if saved in DB events are no longer valid
         /*
             1.1 Get IDs from the DB for not-played events --> done
-            1.2 Search these events on the page --> todo
-            1.3 Home odds outside of range? --> todo
+            1.2 Search these events on the page --> done
+            1.3 Home odds outside of range? --> done
                 - yes: delete event from the DB --> todo
                 - no: do nothing (the event will get inspected in following steps) --> done
          */
@@ -95,6 +97,20 @@ public class Test_Fixtures  {
         String sql = sqlLoader.getSql();
         ArrayList<String> notFinishedEventIds = dbOp.getArray(conn, "id", sql);
 
+        Log.info("Evaluating home odds for " + notFinishedEventIds.size() + " not finished events");
+        for (String id: notFinishedEventIds) {
+            BigDecimal homeOdds = popBets.getHomeOddsById(id);
+            BigDecimal homeOddsMin = prop.getHomeOddsMin();
+            BigDecimal homeOddsMax = prop.getHomeOddsMax();
+            if (
+                    homeOdds != null
+                    && (homeOdds.compareTo(homeOddsMin) < 0
+                    || homeOdds.compareTo(homeOddsMax) > 0)
+            ) {
+                Log.info("Home odds outside of range, deleting " + id + " event...");
+            }
+            Log.info("Successfully evaluated not finished events\n");
+        }
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();

@@ -97,7 +97,12 @@ public class PopularBets {
 
     public BigDecimal getHomeOddsById(String id) {
         String xpath = "(//button[contains(@onclick, '" + id + "')])[1]";
-        String homeOdds = driver.findElement(By.xpath(xpath)).getText();
-        return new BigDecimal(homeOdds);
+        List<WebElement> elements = driver.findElements(By.xpath(xpath));
+        if (elements.isEmpty()) {
+            return null;
+        } else {
+            String homeOdds = elements.get(0).getText();
+            return new BigDecimal(homeOdds);
+        }
     }
 }
