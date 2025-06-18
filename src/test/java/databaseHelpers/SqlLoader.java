@@ -63,4 +63,8 @@ public class SqlLoader {
         }
         return sql;
     }
+
+    public String getSql() {
+        return getSql(null);
+    }
 }

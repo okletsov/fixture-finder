@@ -2,6 +2,7 @@ package tests;
 
 import databaseHelpers.DatabaseOperations;
 import databaseHelpers.EventOperations;
+import databaseHelpers.SqlLoader;
 import genericHelpers.*;
 import org.openqa.selenium.By;
 import pageClasses.*;
@@ -14,6 +15,7 @@ import org.testng.annotations.Test;
 
 import java.sql.Connection;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Test_Fixtures  {
@@ -80,12 +82,19 @@ public class Test_Fixtures  {
 
 //        Step 1: Check if saved in DB events are no longer valid
         /*
-            1.1 Get IDs from the DB for not-played events --> todo
+            1.1 Get IDs from the DB for not-played events --> done
             1.2 Search these events on the page --> todo
             1.3 Home odds outside of range? --> todo
                 - yes: delete event from the DB --> todo
                 - no: do nothing (the event will get inspected in following steps) --> done
          */
+
+//        1.1 Get IDs from the DB for not-played events
+        DatabaseOperations dbOp = new DatabaseOperations();
+        SqlLoader sqlLoader = new SqlLoader("sql/get_not_finished_events.sql");
+        String sql = sqlLoader.getSql();
+        ArrayList<String> notFinishedEventIds = dbOp.getArray(conn, "id", sql);
+
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();

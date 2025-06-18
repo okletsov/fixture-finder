@@ -1,0 +1,1 @@
+SELECT id from event e where e.`result` is null;

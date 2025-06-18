@@ -94,4 +94,10 @@ public class PopularBets {
 
         return eventsMetadata;
     }
+
+    public BigDecimal getHomeOddsById(String id) {
+        String xpath = "(//button[contains(@onclick, '" + id + "')])[1]";
+        String homeOdds = driver.findElement(By.xpath(xpath)).getText();
+        return new BigDecimal(homeOdds);
+    }
 }
