@@ -84,14 +84,13 @@ public class Test_Fixtures  {
 
 //        Step 1: Check if saved in DB events are no longer valid
         /*
-            1.1 Get IDs from the DB for not-played events --> done
-            1.2 Search these events on the page --> done
-            1.3 Home odds outside of range? --> done
-                - yes: delete event from the DB --> done
-                - no: do nothing (the event will get inspected in following steps) --> done
+            1.1 Get IDs from the DB for not-played events
+            1.2 Search these events on the page
+            1.3 Home odds outside of range?
+                - yes: delete event from the DB
+                - no: do nothing (the event will get inspected in following steps)
          */
 
-//        1.1 Get IDs from the DB for not-played events
         DatabaseOperations dbOp = new DatabaseOperations();
         SqlLoader sqlLoader = new SqlLoader("sql/get_not_finished_events.sql");
         String sql = sqlLoader.getSql();
