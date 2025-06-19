@@ -1,0 +1,1 @@
+delete from event where id = :id;

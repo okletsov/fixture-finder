@@ -87,7 +87,7 @@ public class Test_Fixtures  {
             1.1 Get IDs from the DB for not-played events --> done
             1.2 Search these events on the page --> done
             1.3 Home odds outside of range? --> done
-                - yes: delete event from the DB --> todo
+                - yes: delete event from the DB --> done
                 - no: do nothing (the event will get inspected in following steps) --> done
          */
 
@@ -108,9 +108,11 @@ public class Test_Fixtures  {
                     || homeOdds.compareTo(homeOddsMax) > 0)
             ) {
                 Log.info("Home odds outside of range, deleting " + id + " event...");
+                EventOperations eo = new EventOperations(conn);
+                eo.deleteEventById(id);
             }
-            Log.info("Successfully evaluated not finished events\n");
         }
+        Log.info("All not finished events evaluated\n");
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();
@@ -124,7 +126,7 @@ public class Test_Fixtures  {
 //                2.1: Print event to be evaluated further
                 Log.info("Name: " + event.getEventName());
                 Log.info("Url: " + event.getHref());
-                Log.info("Odds: " + event.getHomeOdds() + "; Clicks" + event.getHomeClicks() + "; Pct: " + event.getHomeClicksPct());
+                Log.info("Odds: " + event.getHomeOdds() + "; Clicks: " + event.getHomeClicks() + "; Pct: " + event.getHomeClicksPct());
 
 //                Open event in a new tab
                 SeleniumMethods sm = new SeleniumMethods(driver);

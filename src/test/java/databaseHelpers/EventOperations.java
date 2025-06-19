@@ -117,6 +117,22 @@ public class EventOperations {
         eq.cleanUp();
     }
 
+    public void deleteEventById(String id) {
+        HashMap<String, Object> paramValues = new HashMap<>();
+        paramValues.put("id", id);
+
+        SqlLoader sqlLoader = new SqlLoader("sql/delete_event.sql");
+        String sql = sqlLoader.getSql(paramValues);
+
+        ExecuteQuery eq = new ExecuteQuery(conn, sql);
+        if (eq.getRowsAffected() == 1) {
+            Log.info("Event " + id + " deleted!\n") ;
+        } else {
+            Log.error("Event was not deleted!\n");
+        }
+        eq.cleanUp();
+    }
+
     public String getEventById(String id) {
         HashMap<String, Object> paramValues = new HashMap<>();
         paramValues.put("id", id);
