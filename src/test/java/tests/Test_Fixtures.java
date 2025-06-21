@@ -92,12 +92,12 @@ public class Test_Fixtures  {
          */
 
         DatabaseOperations dbOp = new DatabaseOperations();
-        SqlLoader sqlLoader = new SqlLoader("sql/get_not_finished_events.sql");
+        SqlLoader sqlLoader = new SqlLoader("sql/get_future_events.sql");
         String sql = sqlLoader.getSql();
-        ArrayList<String> notFinishedEventIds = dbOp.getArray(conn, "id", sql);
+        ArrayList<String> futureEventIds = dbOp.getArray(conn, "id", sql);
 
-        Log.info("Evaluating home odds for " + notFinishedEventIds.size() + " not finished events");
-        for (String id: notFinishedEventIds) {
+        Log.info("Evaluating home odds for " + futureEventIds.size() + " future events");
+        for (String id: futureEventIds) {
             BigDecimal homeOdds = popBets.getHomeOddsById(id);
             BigDecimal homeOddsMin = prop.getHomeOddsMin();
             BigDecimal homeOddsMax = prop.getHomeOddsMax();
@@ -111,7 +111,7 @@ public class Test_Fixtures  {
                 eo.deleteEventById(id);
             }
         }
-        Log.info("All not finished events evaluated\n");
+        Log.info("All future events evaluated\n");
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();
