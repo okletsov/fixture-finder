@@ -2,32 +2,27 @@ package tests;
 
 import databaseHelpers.DatabaseOperations;
 import databaseHelpers.EventOperations;
-import databaseHelpers.SqlLoader;
 import genericHelpers.*;
 import org.openqa.selenium.By;
+import org.testng.annotations.*;
 import pageClasses.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
-public class Test_Fixtures  {
+public class Test_AddFixtures {
 
-    private static final Logger Log = LogManager.getLogger(Test_Fixtures.class.getName());
+    private static final Logger Log = LogManager.getLogger(Test_AddFixtures.class.getName());
 
     private final DatabaseOperations dbOp = new DatabaseOperations();
     private Connection conn = null;
     private ChromeDriver driver;
 
-    @BeforeSuite
+    @BeforeTest
     public void setUp() {
 
         // Register the shutdown hook for fallback cleanup
@@ -55,7 +50,7 @@ public class Test_Fixtures  {
 
     }
 
-    @AfterSuite
+    @AfterTest
     public void tearDown() {
         driver.quit();
 
@@ -76,42 +71,10 @@ public class Test_Fixtures  {
 //        Getting necessary classes
         CommonElements ce = new CommonElements(driver);
         PopularBets popBets = new PopularBets(driver);
-        Properties prop = new Properties();
 
 //        Get the page ready
         ce.clickRejectCookies();
         popBets.clickMore();
-
-//        Step 1: Check if saved in DB events are no longer valid
-        /*
-            1.1 Get IDs from the DB for not-played events
-            1.2 Search these events on the page
-            1.3 Home odds outside of range?
-                - yes: delete event from the DB
-                - no: do nothing (the event will get inspected in following steps)
-         */
-
-        DatabaseOperations dbOp = new DatabaseOperations();
-        SqlLoader sqlLoader = new SqlLoader("sql/get_future_events.sql");
-        String sql = sqlLoader.getSql();
-        ArrayList<String> futureEventIds = dbOp.getArray(conn, "id", sql);
-
-        Log.info("Evaluating home odds for " + futureEventIds.size() + " future events");
-        for (String id: futureEventIds) {
-            BigDecimal homeOdds = popBets.getHomeOddsById(id);
-            BigDecimal homeOddsMin = prop.getHomeOddsMin();
-            BigDecimal homeOddsMax = prop.getHomeOddsMax();
-            if (
-                    homeOdds != null
-                    && (homeOdds.compareTo(homeOddsMin) < 0
-                    || homeOdds.compareTo(homeOddsMax) > 0)
-            ) {
-                Log.info("Home odds outside of range, deleting " + id + " event...");
-                EventOperations eo = new EventOperations(conn);
-                eo.deleteEventById(id);
-            }
-        }
-        Log.info("All future events evaluated\n");
 
 //        Step 2: Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();
@@ -159,5 +122,14 @@ public class Test_Fixtures  {
                 sm.closeTab();
             }
         }
+
+        /*
+        Step 3: updating result for finished events
+            3.1 Get event ids from the DB --> todo
+            3.2.Generate URL --> todo
+            3.3 Check if event is finished --> todo
+            3.4 Get event result --> todo
+            3.5 Update DB record --> todo
+         */
     }
 }
