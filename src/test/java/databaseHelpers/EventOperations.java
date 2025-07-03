@@ -117,6 +117,27 @@ public class EventOperations {
         eq.cleanUp();
     }
 
+    public void updateResultById(String id, String mainScore, String detailedScore, String result) {
+        HashMap<String, Object> paramValues = new HashMap<>();
+        paramValues.put("id", id);
+        paramValues.put("main_score", mainScore);
+        paramValues.put("detailed_score", detailedScore);
+        paramValues.put("result", result);
+
+//        Generating sql
+        SqlLoader sqlLoader = new SqlLoader("sql/update_result_by_id.sql");
+        String sql = sqlLoader.getSql(paramValues);
+
+//        Run the insert query
+        ExecuteQuery eq = new ExecuteQuery(conn, sql);
+        if (eq.getRowsAffected() == 1) {
+            Log.info("Result for event " + id + " updated!") ;
+        } else {
+            Log.error("Event was not updated!\n");
+        }
+        eq.cleanUp();
+    }
+
     public void deleteEventById(String id) {
         HashMap<String, Object> paramValues = new HashMap<>();
         paramValues.put("id", id);
@@ -142,5 +163,16 @@ public class EventOperations {
 
         DatabaseOperations dbOp = new DatabaseOperations();
         return dbOp.getSingleValue(conn, "id", sql);
+    }
+
+    public String getUrlById(String id) {
+        HashMap<String, Object> paramValues = new HashMap<>();
+        paramValues.put("id", id);
+
+        SqlLoader sqlLoader = new SqlLoader("sql/get_url_by_id.sql");
+        String sql = sqlLoader.getSql(paramValues);
+
+        DatabaseOperations dbOp = new DatabaseOperations();
+        return dbOp.getSingleValue(conn, "url", sql);
     }
 }

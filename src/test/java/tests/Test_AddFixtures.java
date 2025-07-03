@@ -122,14 +122,5 @@ public class Test_AddFixtures {
                 sm.closeTab();
             }
         }
-
-        /*
-        Step 3: updating result for finished events
-            3.1 Get event ids from the DB --> todo
-            3.2.Generate URL --> todo
-            3.3 Check if event is finished --> todo
-            3.4 Get event result --> todo
-            3.5 Update DB record --> todo
-         */
     }
 }

@@ -90,19 +90,11 @@ public class EventDetails {
     }
 
     public String getMainScore() {
-        if (eventFinished) {
-            return mainScore.getText();
-        } else {
-            return null;
-        }
+        return mainScore.getText();
     }
 
     public String getDetailedScore() {
-        if (eventFinished) {
-            return detailedScore.getText();
-        } else {
-            return null;
-        }
+        return detailedScore.getText();
     }
 
     public String getResult(String href) {
@@ -144,6 +136,10 @@ public class EventDetails {
         } else {
             return 0;
         }
+    }
+
+    public boolean isEventFinished() {
+        return eventFinished;
     }
 
     public String getHomeTeamName() {
