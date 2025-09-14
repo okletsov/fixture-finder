@@ -46,6 +46,10 @@ public class DateTimeOperations {
 	public String convertFromWebsiteToMariDbFormat(String dateTime) {
 		DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy - HH:mm");
 		LocalDateTime input = LocalDateTime.parse(dateTime, inputFormat);
-		return input.format(DateTimeFormatter.ofPattern(datePattern));
+
+		// Subtract 1 hour ( because website doesn't properly determine start time)
+		LocalDateTime adjusted = input.minusHours(1);
+
+		return adjusted.format(DateTimeFormatter.ofPattern(datePattern));
 	}
 }
