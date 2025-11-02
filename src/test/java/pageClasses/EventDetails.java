@@ -282,14 +282,16 @@ public class EventDetails {
     public boolean isStandingsOk() {
 //        Checking for the number of teams in a league
         int teamsCount = getLeagueTeamsCount();
-        if (teamsCount < 15) {
-            Log.info("Phase 2 evaluation failed: number of teams in the league is " + teamsCount + "\n");
-            return false;
-        }
+
+        // Disabling this condition as an unnecessary one
+//        if (teamsCount < 15) {
+//            Log.info("Phase 2 evaluation failed: number of teams in the league is " + teamsCount + "\n");
+//            return false;
+//        }
 
 //        Checking for the number of games played
         int gamesPlayed = getLeagueGamesPlayed();
-        if (gamesPlayed < 15) {
+        if (gamesPlayed < 5) {
             Log.info("Phase 2 evaluation failed: number of games played is " + gamesPlayed + "\n");
             return false;
         }
