@@ -48,8 +48,14 @@ public class DateTimeOperations {
 		LocalDateTime input = LocalDateTime.parse(dateTime, inputFormat);
 
 		// Subtract 1 hour ( because website doesn't properly determine start time)
+		/*
+			Website has a bug. It doesn't treat daylight savings time properly.
+			So when:
+				- time shift happens in spring: method should return "adjusted" time
+				- time shift happens in fall: method should return "input" time
+		 */
 		LocalDateTime adjusted = input.minusHours(1);
 
-		return adjusted.format(DateTimeFormatter.ofPattern(datePattern));
+		return input.format(DateTimeFormatter.ofPattern(datePattern));
 	}
 }
