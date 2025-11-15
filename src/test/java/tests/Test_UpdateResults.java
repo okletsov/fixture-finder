@@ -109,8 +109,9 @@ public class Test_UpdateResults {
 //            Check if event was finished
             EventDetails ed = new EventDetails(driver);
             boolean isFinished = ed.isEventFinished();
+            boolean isScorePresent = sm.isElementPresent("id", "js-score");
 
-            if (isFinished) {
+            if (isFinished && isScorePresent) {
 //                Update main, detailed scores and result
                 String mainScore = ed.getMainScore();
                 String detailedScore = ed.getDetailedScore();
