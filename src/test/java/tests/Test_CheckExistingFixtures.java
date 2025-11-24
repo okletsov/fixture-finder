@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.*;
 import pageClasses.CommonElements;
+import pageClasses.HomePage;
 import pageClasses.PopularBets;
 
 import java.math.BigDecimal;
@@ -70,44 +71,52 @@ public class Test_CheckExistingFixtures {
     @Test
     public void testExistingFixtures() {
 
-//        Getting necessary classes
         CommonElements ce = new CommonElements(driver);
-        PopularBets popBets = new PopularBets(driver);
+        HomePage homePage = new HomePage(driver);
         Properties prop = new Properties();
+        String[] days = {"today", "tomorrow"};
 
 //        Get the page ready
         ce.clickRejectCookies();
-        popBets.clickMore();
 
-        /*
-            Check if saved in DB events are no longer valid:
-                1 Get IDs from the DB for not-played events
-                2 Search these events on the page
-                3 Home odds outside of range?
-                  - yes: delete event from the DB
-                  - no: do nothing (the event will get inspected in following steps)
-         */
-
-        DatabaseOperations dbOp = new DatabaseOperations();
-        SqlLoader sqlLoader = new SqlLoader("sql/get_future_events.sql");
-        String sql = sqlLoader.getSql();
-        ArrayList<String> futureEventIds = dbOp.getArray(conn, "id", sql);
-
-        Log.info("Evaluating home odds for " + futureEventIds.size() + " future events");
-        for (String id: futureEventIds) {
-            BigDecimal homeOdds = popBets.getHomeOddsById(id);
-            BigDecimal homeOddsMin = prop.getHomeOddsMin();
-            BigDecimal homeOddsMax = prop.getHomeOddsMax();
-            if (
-                    homeOdds != null
-                    && (homeOdds.compareTo(homeOddsMin) < 0
-                    || homeOdds.compareTo(homeOddsMax) > 0)
-            ) {
-                Log.info("Home odds outside of range, deleting " + id + " event...");
-                EventOperations eo = new EventOperations(conn);
-                eo.deleteEventById(id);
+        for (String day : days) {
+            if (day.equals("tomorrow")) {
+                homePage.clickNextDayBtn();
+                Log.info("Inspecting events scheduled for tomorrow");
             }
+
+            homePage.loadAllEvents();
+
+            /*
+                Check if saved in DB events are no longer valid:
+                    1 Get IDs from the DB for not-played events
+                    2 Search these events on the page
+                    3 Home odds outside of range?
+                      - yes: delete event from the DB
+                      - no: do nothing (the event will get inspected in following steps)
+             */
+
+            DatabaseOperations dbOp = new DatabaseOperations();
+            SqlLoader sqlLoader = new SqlLoader("sql/get_future_events.sql");
+            String sql = sqlLoader.getSql();
+            ArrayList<String> futureEventIds = dbOp.getArray(conn, "id", sql);
+
+            Log.info("Evaluating home odds for " + futureEventIds.size() + " future events");
+            for (String id : futureEventIds) {
+                BigDecimal homeOdds = homePage.getHomeOddsById(id);
+                BigDecimal homeOddsMin = prop.getHomeOddsMin();
+                BigDecimal homeOddsMax = prop.getHomeOddsMax();
+                if (
+                        homeOdds != null
+                        && (homeOdds.compareTo(homeOddsMin) < 0
+                        || homeOdds.compareTo(homeOddsMax) > 0)
+                ) {
+                    Log.info("Home odds outside of range, deleting " + id + " event...");
+                    EventOperations eo = new EventOperations(conn);
+                    eo.deleteEventById(id);
+                }
+            }
+            Log.info("All future events evaluated\n");
         }
-        Log.info("All future events evaluated\n");
     }
 }

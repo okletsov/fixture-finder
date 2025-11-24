@@ -50,8 +50,6 @@ public class EventOperations {
         paramValues.put("odds_home", eventMetadata.getHomeOdds());
         paramValues.put("odds_draw", eventMetadata.getDrawOdds());
         paramValues.put("odds_away", eventMetadata.getAwayOdds());
-        paramValues.put("home_clicks_count", eventMetadata.getHomeClicks());
-        paramValues.put("home_clicks_pct", eventMetadata.getHomeClicksPct());
         paramValues.put("main_score", null);
         paramValues.put("detailed_score", null);
         paramValues.put("result", null);
@@ -96,8 +94,6 @@ public class EventOperations {
         paramValues.put("odds_home", eventMetadata.getHomeOdds());
         paramValues.put("odds_draw", eventMetadata.getDrawOdds());
         paramValues.put("odds_away", eventMetadata.getAwayOdds());
-        paramValues.put("home_clicks_count", eventMetadata.getHomeClicks());
-        paramValues.put("home_clicks_pct", eventMetadata.getHomeClicksPct());
         paramValues.put("dropping_odds_count", eventDetails.getDroppingOddsCount());
         paramValues.put("dropping_odds_pct", eventDetails.getDroppingOddsPct());
         paramValues.put("date_updated", dtOp.getTimestamp());
