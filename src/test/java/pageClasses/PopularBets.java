@@ -84,8 +84,8 @@ public class PopularBets {
                         homeOdds,
                         drawOdds,
                         awayOdds,
-                        homeClicks,
-                        homeClicksPct,
+//                        homeClicks,
+//                        homeClicksPct,
                         href,
                         id
                 ));

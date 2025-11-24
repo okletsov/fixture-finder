@@ -12,6 +12,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.sql.Connection;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Test_AddFixtures {
@@ -68,33 +69,40 @@ public class Test_AddFixtures {
     @Test
     public void testFixtures() {
 
-//        Getting necessary classes
         CommonElements ce = new CommonElements(driver);
-        PopularBets popBets = new PopularBets(driver);
+        HomePage homePage = new HomePage(driver);
+        String[] days = {"today", "tomorrow"};
 
-//        Get the page ready
+//        Step 1: Get the page ready
         ce.clickRejectCookies();
-        popBets.clickMore();
 
-//        Step 2: Apply phase 1 filters to get events for further evaluation
-        List<EventMetadata> phaseOneEvents = popBets.getPhaseOneEvents();
+        for (String day: days) {
+            if (day.equals("tomorrow")) {
+                homePage.clickNextDayBtn();
+                Log.info("Inspecting events scheduled for tomorrow");
+            }
 
-        if (phaseOneEvents.isEmpty()) {
-            Log.info("Phase 1 evaluation failed: no events found");
-        } else {
-            Log.info("Phase 1 evaluation returned " + phaseOneEvents.size() + " event(s): \n");
-            for (EventMetadata event: phaseOneEvents) {
+            homePage.loadAllEvents();
+
+//            Step 2: Apply phase 1 filters to get events for further evaluation
+            List<EventMetadata> phaseOneEvents = homePage.getPhaseOneEvents();
+
+            if (phaseOneEvents.isEmpty()) {
+                Log.info("Phase 1 evaluation failed: no events found");
+            } else {
+                Log.info("Phase 1 evaluation returned " + phaseOneEvents.size() + " event(s): \n");
+                for (EventMetadata eventMetadata: phaseOneEvents) {
 
 //                2.1: Print event to be evaluated further
-                Log.info("Name: " + event.getEventName());
-                Log.info("Url: " + event.getHref());
-                Log.info("Odds: " + event.getHomeOdds() + "; Clicks: " + event.getHomeClicks() + "; Pct: " + event.getHomeClicksPct());
+                    Log.info("Name: " + eventMetadata.getEventName());
+                    Log.info("Url: " + eventMetadata.getHref());
+                    Log.info("Odds: " + eventMetadata.getHomeOdds());
 
 //                Open event in a new tab
-                SeleniumMethods sm = new SeleniumMethods(driver);
-                sm.openNewTab(event.getHref());
-                sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(15));
-                EventDetails ed = new EventDetails(driver);
+                    SeleniumMethods sm = new SeleniumMethods(driver);
+                    sm.openNewTab(eventMetadata.getHref());
+                    sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(15));
+                    EventDetails eventDetails = new EventDetails(driver);
 
                 /*
                     2.2 Does event already exist in the DB?
@@ -104,23 +112,25 @@ public class Test_AddFixtures {
                             - no: do nothing
                  */
 
-                EventOperations eo = new EventOperations(conn, event, ed);
-                boolean eventExistsInDb = eo.getEventById(event.getId()) != null;
+                    EventOperations eo = new EventOperations(conn, eventMetadata, eventDetails);
+                    boolean eventExistsInDb = eo.getEventById(eventMetadata.getId()) != null;
 
-                if (eventExistsInDb) {
-                    eo.updateEvent();
-                } else if (
-                        ed.isTournamentOk()
-                        && ed.isStandingsOk()
-                        && ed.isLastH2hGameOk()
-                ) {
-                    Log.info("Phase 2 evaluation successful!");
-                    eo.addEvent();
-                }
+                    if (eventExistsInDb) {
+                        eo.updateEvent();
+                    } else if (
+                            eventDetails.isTournamentOk()
+                            && eventDetails.isStandingsOk()
+                            && eventDetails.isLastH2hGameOk()
+                    ) {
+                        Log.info("Phase 2 evaluation successful!\n");
+                        eo.addEvent();
+                    }
 
 //                Close tab
-                sm.closeTab();
+                    sm.closeTab();
+                }
             }
         }
+
     }
 }

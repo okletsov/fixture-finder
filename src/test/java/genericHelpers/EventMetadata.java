@@ -8,8 +8,6 @@ public class EventMetadata {
     private final BigDecimal homeOdds;
     private final BigDecimal drawOdds;
     private final BigDecimal awayOdds;
-    private final int homeClicks;
-    private final int homeClicksPct;
     private final String href;
     private final String id;
 
@@ -18,8 +16,6 @@ public class EventMetadata {
             BigDecimal homeOdds,
             BigDecimal drawOdds,
             BigDecimal awayOdds,
-            int homeClicks,
-            int homeClicksPct,
             String href,
             String id
     ) {
@@ -27,8 +23,6 @@ public class EventMetadata {
         this.homeOdds = homeOdds;
         this.drawOdds = drawOdds;
         this.awayOdds = awayOdds;
-        this.homeClicks = homeClicks;
-        this.homeClicksPct = homeClicksPct;
         this.href = href;
         this.id = id;
     }
@@ -47,14 +41,6 @@ public class EventMetadata {
 
     public BigDecimal getAwayOdds() {
         return awayOdds;
-    }
-
-    public int getHomeClicks() {
-        return homeClicks;
-    }
-
-    public int getHomeClicksPct() {
-        return homeClicksPct;
     }
 
     public String getHref() {
