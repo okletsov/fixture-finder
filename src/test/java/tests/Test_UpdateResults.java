@@ -98,6 +98,7 @@ public class Test_UpdateResults {
 
         Log.info("Updating result for " + noResultEventIds.size() + " events");
         for (String id: noResultEventIds) {
+            Log.info("Updating " + id + " event");
             SeleniumMethods sm = new SeleniumMethods(driver);
 
 //            Get event url from the db and open it in a new tab
