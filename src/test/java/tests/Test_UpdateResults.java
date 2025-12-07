@@ -115,7 +115,7 @@ public class Test_UpdateResults {
 //            Delete event if it is void
             boolean isVoid = ed.isEventVoid();
             if (isVoid) {
-                Log.info("Void event");
+                Log.info("Void event:" + url);
                 eo.deleteEventById(id);
                 continue;
             }
