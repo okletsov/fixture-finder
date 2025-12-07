@@ -46,6 +46,9 @@ public class EventDetails {
     @FindBy(id = "isFinished")
     public WebElement isFinished;
 
+    @FindBy(id = "js-eventstage")
+    public List<WebElement> eventStage;
+
     @FindBy(id = "js-score")
     public WebElement mainScore;
 
@@ -95,6 +98,19 @@ public class EventDetails {
 
     public String getDetailedScore() {
         return detailedScore.getText();
+    }
+
+    public boolean isEventVoid() {
+        String[] voidStages ={"Abandoned", "Postponed"};
+
+        if (eventStage.isEmpty()) { return false; }
+        String stageOnPage = eventStage.get(0).getText();
+
+        for(String voidStage : voidStages) {
+            if (voidStage.equals(stageOnPage)) { return true; }
+        }
+
+        return false;
     }
 
     public String getResult(String href) {

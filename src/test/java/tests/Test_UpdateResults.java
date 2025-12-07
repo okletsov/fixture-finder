@@ -87,8 +87,9 @@ public class Test_UpdateResults {
             3.1 Get event ids from the DB
             3.2.Get URL
             3.3 Check if event is finished
-            3.4 Get event result, main and detailed score
-            3.5 Update DB record
+            3.4 Delete event if it is void
+            3.5 Get event result, main and detailed score
+            3.6 Update DB record
          */
 
         DatabaseOperations dbOp = new DatabaseOperations();
@@ -98,7 +99,7 @@ public class Test_UpdateResults {
 
         Log.info("Updating result for " + noResultEventIds.size() + " events");
         for (String id: noResultEventIds) {
-            Log.info("Updating " + id + " event");
+            Log.info("Event being updated: " + id);
             SeleniumMethods sm = new SeleniumMethods(driver);
 
 //            Get event url from the db and open it in a new tab
@@ -110,6 +111,15 @@ public class Test_UpdateResults {
 //            Check if event was finished
             EventDetails ed = new EventDetails(driver);
             boolean isFinished = ed.isEventFinished();
+
+//            Delete event if it is void
+            boolean isVoid = ed.isEventVoid();
+            if (isVoid) {
+                Log.info("Void event");
+                eo.deleteEventById(id);
+                continue;
+            }
+
             boolean isScorePresent = sm.isElementPresent("id", "js-score");
 
             if (isFinished && isScorePresent) {
