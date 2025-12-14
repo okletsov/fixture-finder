@@ -97,7 +97,14 @@ public class EventDetails {
     }
 
     public String getDetailedScore() {
-        return detailedScore.getText();
+
+        String elementId = "js-partial";
+        List<WebElement> detailScores = driver.findElements(By.id(elementId));
+        if (!detailScores.isEmpty()) {
+            return driver.findElement(By.id(elementId)).getText();
+        } else {
+            return null;
+        }
     }
 
     public boolean isEventVoid() {
