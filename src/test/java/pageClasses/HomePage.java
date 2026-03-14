@@ -6,11 +6,13 @@ import genericHelpers.SeleniumMethods;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -53,25 +55,34 @@ public class HomePage {
 
     public void loadAllEvents() {
 
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        int previousCount = 0;
         int currentCount = getEventList().size();
-        int previousCount;
 
         Log.info("Scrolling down...");
 
-        do {
-//            Scroll to the bottom of the page and wait
-            Actions actions = new Actions(driver);
-            actions.moveToElement(pageBottom).perform();
-            try {
-                Thread.sleep(2500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+        while (previousCount != currentCount) {
 
             previousCount = currentCount;
+
+            new Actions(driver)
+                    .moveToElement(pageBottom)
+                    .perform();
+
+            try {
+                int finalPreviousCount = previousCount;
+                wait.until(driver -> getEventList().size() > finalPreviousCount);
+            } catch (TimeoutException e) {
+                // No new events loaded
+                break;
+            }
+
             currentCount = getEventList().size();
 
-        } while (previousCount != currentCount);
+            int newEventsLoaded = currentCount - previousCount;
+            Log.info("New events loaded: " + newEventsLoaded);
+        }
 
         Log.info("All events loaded. Events found: " + currentCount + "\n");
     }
