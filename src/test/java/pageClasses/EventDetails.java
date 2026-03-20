@@ -149,6 +149,9 @@ public class EventDetails {
         }
     }
 
+    public int getOddsCount() {
+        return oddsList.size();
+    }
     public int getDroppingOddsCount() {
         return droppingOdds.size();
     }
