@@ -35,6 +35,11 @@ public class SeleniumMethods {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
+    public List<WebElement> waitForElementListToLoad(By locator, Duration timeout) {
+        WebDriverWait wait = new WebDriverWait(driver, timeout);
+        return wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(locator, 0));
+    }
+
     public boolean isElementPresent(String type, String locator) {
 
         /*

@@ -101,7 +101,11 @@ public class Test_AddFixtures {
 //                Open event in a new tab
                     SeleniumMethods sm = new SeleniumMethods(driver);
                     sm.openNewTab(eventMetadata.getHref());
+
+//                    Waiting for the standings table and the list of odds to load
                     sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(15));
+                    sm.waitForElementListToLoad(By.cssSelector("#best-odds-0 > tr"), Duration.ofSeconds(15));
+
                     EventDetails eventDetails = new EventDetails(driver);
 
                 /*
