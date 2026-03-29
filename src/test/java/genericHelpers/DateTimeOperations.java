@@ -56,6 +56,6 @@ public class DateTimeOperations {
 		 */
 		LocalDateTime adjusted = input.minusHours(1);
 
-		return input.format(DateTimeFormatter.ofPattern(datePattern));
+		return adjusted.format(DateTimeFormatter.ofPattern(datePattern));
 	}
 }
