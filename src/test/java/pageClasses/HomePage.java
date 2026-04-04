@@ -60,12 +60,11 @@ public class HomePage {
         int previousCount = 0;
         int currentCount = getEventList().size();
 
-        Log.info("Scrolling down...");
-
         while (previousCount != currentCount) {
 
             previousCount = currentCount;
 
+            Log.info("Scrolling down...");
             new Actions(driver)
                     .moveToElement(pageBottom)
                     .perform();
