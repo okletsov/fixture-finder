@@ -18,11 +18,15 @@ import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HomePage {
 
     private static final Logger Log = LogManager.getLogger(HomePage.class.getName());
+
+    private static final int maxScrollIterations = 30;
 
     private final WebDriver driver;
     private final String eventCss = "[data-event-id]";
@@ -45,6 +49,17 @@ public class HomePage {
         return driver.findElements(By.cssSelector(eventCss));
     }
 
+    private Set<String> collectUniqueEventIds() {
+        Set<String> ids = new HashSet<>();
+        for (WebElement el : getEventList()) {
+            String id = el.getDomAttribute("data-event-id");
+            if (id != null && !id.trim().isEmpty()) {
+                ids.add(id);
+            }
+        }
+        return ids;
+    }
+
     public void clickNextDayBtn() {
         Actions actions = new Actions(driver);
         actions.moveToElement(nextDayBtn).perform();
@@ -57,12 +72,12 @@ public class HomePage {
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        int previousCount = 0;
-        int currentCount = getEventList().size();
+        Set<String> knownIds = collectUniqueEventIds();
+        int iterationsDone = 0;
 
-        while (previousCount != currentCount) {
+        for (int i = 0; i < maxScrollIterations; i++) {
 
-            previousCount = currentCount;
+            Set<String> knownBeforeScroll = new HashSet<>(knownIds);
 
             Log.info("Scrolling down...");
             new Actions(driver)
@@ -70,20 +85,31 @@ public class HomePage {
                     .perform();
 
             try {
-                int finalPreviousCount = previousCount;
-                wait.until(driver -> getEventList().size() > finalPreviousCount);
+                final Set<String> beforeScroll = knownBeforeScroll;
+                wait.until(d -> collectUniqueEventIds().stream().anyMatch(id -> !beforeScroll.contains(id)));
             } catch (TimeoutException e) {
-                // No new events loaded
                 break;
             }
 
-            currentCount = getEventList().size();
+            Set<String> now = collectUniqueEventIds();
+            int newUnique = 0;
+            for (String id : now) {
+                if (!knownBeforeScroll.contains(id)) {
+                    newUnique++;
+                }
+            }
+            knownIds = new HashSet<>(now);
+            iterationsDone++;
 
-            int newEventsLoaded = currentCount - previousCount;
-            Log.info("New events loaded: " + newEventsLoaded);
+            Log.info("New unique events loaded: " + newUnique + ". Total unique: " + knownIds.size());
         }
 
-        Log.info("All events loaded. Events found: " + currentCount + "\n");
+        if (iterationsDone == maxScrollIterations) {
+            Log.warn("loadAllEvents stopped after " + maxScrollIterations
+                    + " scroll iterations (cap reached). Unique events: " + knownIds.size());
+        }
+
+        Log.info("All events loaded. Unique events: " + knownIds.size() + "\n");
     }
 
     public List<EventMetadata> getPhaseOneEvents() {
