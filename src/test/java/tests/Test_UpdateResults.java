@@ -106,7 +106,7 @@ public class Test_UpdateResults {
             EventOperations eo = new EventOperations(conn);
             String url = eo.getUrlById(id);
             sm.openNewTab(url);
-            sm.waitForElement(By.id("js-mutual-table"), Duration.ofSeconds(15));
+            sm.waitForElement(By.id("js-mutual-table"), Duration.ofSeconds(20));
 
 //            Check if event was finished
             EventDetails ed = new EventDetails(driver);

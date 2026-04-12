@@ -103,8 +103,8 @@ public class Test_AddFixtures {
                     sm.openNewTab(eventMetadata.getHref());
 
 //                    Waiting for the standings table and the list of odds to load
-                    sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(15));
-                    sm.waitForElementListToLoad(By.cssSelector("#best-odds-0 > tr"), Duration.ofSeconds(15));
+                    sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(20));
+                    sm.waitForElementListToLoad(By.cssSelector("#best-odds-0 > tr"), Duration.ofSeconds(20));
 
                     EventDetails eventDetails = new EventDetails(driver);
 

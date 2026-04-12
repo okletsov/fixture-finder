@@ -65,12 +65,12 @@ public class HomePage {
         actions.moveToElement(nextDayBtn).perform();
         nextDayBtn.click();
         SeleniumMethods sm = new SeleniumMethods(driver);
-        sm.waitForElement(By.cssSelector(eventCss), Duration.ofSeconds(5));
+        sm.waitForElement(By.cssSelector(eventCss), Duration.ofSeconds(20));
     }
 
     public void loadAllEvents() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
         Set<String> knownIds = collectUniqueEventIds();
         int iterationsDone = 0;

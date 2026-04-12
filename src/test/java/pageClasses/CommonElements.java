@@ -24,8 +24,8 @@ public class CommonElements {
 
         String css = "#onetrust-reject-all-handler";
         SeleniumMethods sm = new SeleniumMethods(driver);
-        sm.waitForElement(By.cssSelector(css), Duration.ofSeconds(5));
+        sm.waitForElement(By.cssSelector(css), Duration.ofSeconds(20));
         driver.findElement(By.cssSelector(css)).click();
-        sm.waitForElementInvisibility(By.cssSelector(css), Duration.ofSeconds(5));
+        sm.waitForElementInvisibility(By.cssSelector(css), Duration.ofSeconds(20));
     }
 }
