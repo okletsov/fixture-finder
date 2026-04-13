@@ -26,7 +26,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'fixture-finder-config-properties',
                                       variable: 'CONFIG_FILE')]) {
-                    sh 'cp "$CONFIG_FILE" "$WORKSPACE/config.properties"'
+                    sh 'install -m 644 "$CONFIG_FILE" "$WORKSPACE/config.properties"'
                 }
             }
         }
