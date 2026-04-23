@@ -48,7 +48,7 @@ pipeline {
     post {
         always {
             sh 'sudo wg-quick down wg0 || true'
-            archiveArtifacts artifacts: 'logs/*.log', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'logs/**', allowEmptyArchive: true
         }
     }
 }

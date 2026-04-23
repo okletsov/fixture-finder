@@ -1,6 +1,10 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="Main Suite" verbose="1" parallel="false">
+    <listeners>
+        <listener class-name="genericHelpers.TestFailureListener"/>
+    </listeners>
+
     <test name="Process Today">
         <parameter name="day" value="today"/>
         <classes>
