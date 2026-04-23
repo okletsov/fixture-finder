@@ -1,15 +1,17 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
 
 <suite name="Main Suite" verbose="1" parallel="false">
-    <test name="Check Existing Fixtures">
+    <test name="Process Today">
+        <parameter name="day" value="today"/>
         <classes>
-            <class name="tests.Test_CheckExistingFixtures"/>
+            <class name="tests.Test_ProcessDay"/>
         </classes>
     </test>
 
-    <test name="Add Fixtures">
+    <test name="Process Tomorrow">
+        <parameter name="day" value="tomorrow"/>
         <classes>
-            <class name="tests.Test_AddFixtures"/>
+            <class name="tests.Test_ProcessDay"/>
         </classes>
     </test>
 
