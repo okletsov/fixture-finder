@@ -22,6 +22,12 @@ pipeline {
             }
         }
 
+        stage('Clean Artifacts') {
+            steps {
+                sh 'rm -rf logs && mkdir -p logs'
+            }
+        }
+
         stage('Inject config.properties') {
             steps {
                 withCredentials([file(credentialsId: 'fixture-finder-config-properties',
