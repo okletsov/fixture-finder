@@ -6,6 +6,7 @@ import genericHelpers.SeleniumMethods;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -51,11 +52,21 @@ public class HomePage {
 
     private Set<String> collectUniqueEventIds() {
         Set<String> ids = new HashSet<>();
-        for (WebElement el : getEventList()) {
-            String id = el.getDomAttribute("data-event-id");
-            if (id != null && !id.trim().isEmpty()) {
-                ids.add(id);
+        try {
+            List<WebElement> eventElements = getEventList();
+            for (WebElement element : eventElements) {
+                try {
+                    String eventId = element.getDomAttribute("data-event-id");
+                    if (eventId != null && !eventId.isEmpty()) {
+                        ids.add(eventId);
+                    }
+                } catch (StaleElementReferenceException e) {
+                    // Element was removed/re-rendered during iteration, skip it
+                    Log.debug("Stale element skipped during collection");
+                }
             }
+        } catch (Exception e) {
+            Log.warn("Error collecting event IDs: " + e.getMessage());
         }
         return ids;
     }
@@ -86,7 +97,15 @@ public class HomePage {
 
             try {
                 final Set<String> beforeScroll = knownBeforeScroll;
-                wait.until(d -> collectUniqueEventIds().stream().anyMatch(id -> !beforeScroll.contains(id)));
+                wait.until(d -> {
+                    // Retry on stale element to handle DOM updates
+                    try {
+                        return collectUniqueEventIds().stream()
+                                .anyMatch(id -> !beforeScroll.contains(id));
+                    } catch (StaleElementReferenceException e) {
+                        return false; // Retry - element was stale
+                    }
+                });
             } catch (TimeoutException e) {
                 break;
             }
