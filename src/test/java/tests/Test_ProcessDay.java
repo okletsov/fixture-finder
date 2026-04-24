@@ -75,6 +75,10 @@ public class Test_ProcessDay extends BaseTest {
         //            Apply phase 1 filters to get events for further evaluation
         List<EventMetadata> phaseOneEvents = homePage.getPhaseOneEvents();
 
+        // Reclaim memory: unload homePage DOM and release cached WebElements
+        driver.navigate().to("about:blank");
+        homePage = null;
+
         if (phaseOneEvents.isEmpty()) {
             Log.info("Phase 1 evaluation failed: no events found");
         } else {
