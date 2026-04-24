@@ -25,6 +25,12 @@ public class TestFailureListener implements ITestListener {
     public void onTestFailure(ITestResult result) {
         Log.error("Test failed: " + result.getName());
 
+        // Log the actual exception/error details
+        Throwable throwable = result.getThrowable();
+        if (throwable != null) {
+            Log.error("Exception: " + throwable.getMessage(), throwable);
+        }
+
         try {
             // Try to retrieve the ChromeDriver from the test instance
             ChromeDriver driver = getDriverFromTestInstance(result.getInstance());
