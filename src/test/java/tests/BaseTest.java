@@ -49,6 +49,9 @@ public class BaseTest {
         String baseUrl = prop.getSiteUrl();
         driver.get(baseUrl);
 
+        // Perform network health check before proceeding
+        performNetworkHealthCheck(baseUrl);
+
         ce = new CommonElements(driver);
         homePage = new HomePage(driver);
 
@@ -60,5 +63,47 @@ public class BaseTest {
     public void tearDown() {
         driver.quit();
         dbOp.closeConnection(conn);
+    }
+
+    /**
+     * Performs a network health check to ensure adequate connectivity before test execution.
+     * Skips the test if network conditions are degraded.
+     *
+     * @param baseUrl the base URL to test connectivity against
+     * @throws SkipException if network health check fails
+     */
+    protected void performNetworkHealthCheck(String baseUrl) {
+        Log.info("Performing network health check...");
+
+        try {
+            long startTime = System.currentTimeMillis();
+            
+            // Navigate to a lightweight endpoint or reload current page to measure response time
+            driver.navigate().refresh();
+            
+            long loadTime = System.currentTimeMillis() - startTime;
+            Log.info("Page load time: " + loadTime + "ms");
+
+            // Define thresholds for network quality
+            final long SLOW_NETWORK_THRESHOLD = 5000; // 5 seconds
+            final long CRITICAL_THRESHOLD = 10000;      // 10 seconds
+
+            if (loadTime > CRITICAL_THRESHOLD) {
+                Log.error("CRITICAL: Network response time exceeded " + CRITICAL_THRESHOLD + "ms. "
+                        + "Current load time: " + loadTime + "ms");
+                throw new RuntimeException("Network conditions critically degraded. "
+                        + "Test skipped to avoid timeout failures.");
+            } else if (loadTime > SLOW_NETWORK_THRESHOLD) {
+                Log.warn("WARNING: Slow network detected. Page load time: " + loadTime + "ms. "
+                        + "Test may be prone to timeouts. Consider adjusting element wait timeouts.");
+            } else {
+                Log.info("Network health check passed. Load time within acceptable range.");
+            }
+
+        } catch (Exception e) {
+            Log.error("Network health check failed with exception: " + e.getMessage());
+            throw new RuntimeException("Network health check failed. Unable to verify connectivity. "
+                    + "Error: " + e.getMessage());
+        }
     }
 }

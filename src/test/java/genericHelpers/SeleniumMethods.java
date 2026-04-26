@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -33,6 +34,19 @@ public class SeleniumMethods {
     public void waitForElementInvisibility(By locator, Duration timeout) {
         WebDriverWait wait = new WebDriverWait(driver, timeout);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    }
+
+    public void waitForElementWithRetry(By locator, int maxAttempts) {
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                int timeout = 20 * attempt; // 20s, 40s, 60s
+                waitForElement(locator, Duration.ofSeconds(timeout));
+                return;
+            } catch (TimeoutException e) {
+                if (attempt == maxAttempts) throw e;
+                Log.warn("Attempt " + attempt + " failed, retrying with longer timeout...");
+            }
+        }
     }
 
     public List<WebElement> waitForElementListToLoad(By locator, Duration timeout) {

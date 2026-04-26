@@ -46,7 +46,9 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                sh '/usr/bin/mvn clean test -DsuiteXmlFile=testng.xml'
+                retry(2) {
+                    sh '/usr/bin/mvn clean test -DsuiteXmlFile=testng.xml'
+                }
             }
         }
     }

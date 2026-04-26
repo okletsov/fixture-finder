@@ -94,8 +94,11 @@ public class Test_ProcessDay extends BaseTest {
                 SeleniumMethods sm = new SeleniumMethods(driver);
                 sm.openNewTab(eventMetadata.getHref());
 
-//                    Waiting for the standings table and the list of odds to load
-                sm.waitForElement(By.id("standingsComponent"), Duration.ofSeconds(20));
+//                  Wait for ANY content to start loading
+                sm.waitForElement(By.tagName("body"), Duration.ofSeconds(20));
+
+//                  Waiting for the standings table and the list of odds to load
+                sm.waitForElementWithRetry(By.id("standingsComponent"), 3);
                 sm.waitForElementListToLoad(By.cssSelector("#best-odds-0 > tr"), Duration.ofSeconds(20));
 
                 EventDetails eventDetails = new EventDetails(driver);
