@@ -3,8 +3,11 @@ package tests;
 import databaseHelpers.DatabaseOperations;
 import genericHelpers.BrowserDriver;
 import genericHelpers.Properties;
+import genericHelpers.SeleniumMethods;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
@@ -12,6 +15,7 @@ import pageClasses.CommonElements;
 import pageClasses.HomePage;
 
 import java.sql.Connection;
+import java.time.Duration;
 
 public class BaseTest {
 
@@ -70,7 +74,7 @@ public class BaseTest {
      * Skips the test if network conditions are degraded.
      *
      * @param baseUrl the base URL to test connectivity against
-     * @throws SkipException if network health check fails
+     * @throws RuntimeException if network health check fails
      */
     protected void performNetworkHealthCheck(String baseUrl) {
         Log.info("Performing network health check...");
@@ -80,6 +84,8 @@ public class BaseTest {
             
             // Navigate to a lightweight endpoint or reload current page to measure response time
             driver.navigate().refresh();
+            SeleniumMethods sm = new SeleniumMethods(driver);
+            sm.waitForElement(By.cssSelector("[data-event-id]"), Duration.ofSeconds(20));
             
             long loadTime = System.currentTimeMillis() - startTime;
             Log.info("Page load time: " + loadTime + "ms");

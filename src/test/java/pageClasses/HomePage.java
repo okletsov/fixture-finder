@@ -145,7 +145,7 @@ public class HomePage {
             String homeName = el.findElement(By.xpath(".//a//div[1]//p")).getText();
             String awayName = el.findElement(By.xpath(".//a//div[3]//p")).getText();
             String eventName = homeName + " - " + awayName;
-            Log.debug("Inspecting event: " + eventName);
+            Log.info("Phase 1. Inspecting event: " + eventName);
 
 //            Skipping to the next event if current event is not a future event
             long eventDateTime = Long.parseLong(el.getDomAttribute("data-ts"));
