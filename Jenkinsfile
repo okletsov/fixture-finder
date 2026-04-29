@@ -39,16 +39,24 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                retry(2) {
-                    sh '''
-                        echo "Cycling VPN connection..."
-                        sudo wg-quick down wg0 || true
-                        sleep 2
-                        sudo wg-quick up wg0
-                        sleep 3
-                        echo "VPN reconnected. Starting tests..."
-                        /usr/bin/mvn clean test -DsuiteXmlFile=testng.xml
-                    '''
+                script {
+                    def retryAttempt = 0
+                    
+                    retry(2) {
+                        retryAttempt++
+                        sh '''
+                            echo "Cycling VPN connection..."
+                            sudo wg-quick down wg0 || true
+                            sleep 2
+                            sudo wg-quick up wg0
+                            sleep 3
+                            echo "VPN reconnected. Starting tests..."
+                            /usr/bin/mvn clean test -DsuiteXmlFile=testng.xml
+                        '''
+                    }
+                    if (retryAttempt > 1) {
+                        currentBuild.displayName = "#${env.BUILD_NUMBER} (R)"
+                    }
                 }
             }
         }
