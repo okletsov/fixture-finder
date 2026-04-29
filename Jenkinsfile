@@ -37,17 +37,18 @@ pipeline {
             }
         }
 
-        stage('VPN Up') {
-            steps {
-                sh 'sudo wg-quick down wg0 || true'
-                sh 'sudo wg-quick up wg0'
-            }
-        }
-
         stage('Run Tests') {
             steps {
                 retry(2) {
-                    sh '/usr/bin/mvn clean test -DsuiteXmlFile=testng.xml'
+                    sh '''
+                        echo "Cycling VPN connection..."
+                        sudo wg-quick down wg0 || true
+                        sleep 2
+                        sudo wg-quick up wg0
+                        sleep 3
+                        echo "VPN reconnected. Starting tests..."
+                        /usr/bin/mvn clean test -DsuiteXmlFile=testng.xml
+                    '''
                 }
             }
         }
