@@ -23,6 +23,7 @@ public class Test_ProcessDay extends BaseTest {
     @Test
     @Parameters("day")
     public void processDay(String day) {
+        Log.info("========== PROCESSING EVENTS FOR " + day.toUpperCase() + " ==========");
         // Load events once for the day
         if (day.equals("tomorrow")) {
             homePage.clickNextDayBtn();
@@ -31,11 +32,11 @@ public class Test_ProcessDay extends BaseTest {
         homePage.loadAllEvents();
 
         // Phase 1: Check existing fixtures and validate home odds
-        Log.info("========== CHECKING EXISTING FIXTURES ==========");
+        Log.info("========== CHECKING EXISTING FIXTURES FOR " + day.toUpperCase() + " ==========");
         checkExistingFixtures();
 
         // Phase 2: Add new fixtures
-        Log.info("========== ADDING NEW FIXTURES ==========");
+        Log.info("========== ADDING NEW FIXTURES FOR " + day.toUpperCase() + " ==========");
         addNewFixtures();
     }
 
