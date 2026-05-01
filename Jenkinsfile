@@ -40,26 +40,43 @@ pipeline {
         stage('Run Tests') {
             steps {
                 script {
-                    def retryAttempt = 0
-                    
-                    retry(2) {
-                        retryAttempt++
-                        sh '''
+                    def result = sh(
+                        script: '''
                             echo "Cycling VPN connection..."
                             sudo wg-quick down wg0 || true
                             sleep 2
                             sudo wg-quick up wg0
                             sleep 3
-                            echo "VPN reconnected. Starting tests..."
                             /usr/bin/mvn clean test -DsuiteXmlFile=testng.xml
-                        '''
-                    }
-                    if (retryAttempt > 1) {
+                        ''',
+                        returnStatus: true
+                    )
+
+                    if (result != 0) {
                         currentBuild.displayName = "#${env.BUILD_NUMBER} (R)"
+
+                        // Save first run's reports before retry overwrites them
+                        sh 'cp -r target/surefire-reports target/surefire-reports-run1 || true'
+
+                        def retryResult = sh(
+                            script: '''
+                                echo "Cycling VPN connection for retry..."
+                                sudo wg-quick down wg0 || true
+                                sleep 2
+                                sudo wg-quick up wg0
+                                sleep 3
+                                /usr/bin/mvn test -DsuiteXmlFile=target/surefire-reports/testng-failed.xml
+                            ''',
+                            returnStatus: true
+                        )
+
+                        if (retryResult != 0) {
+                            error("Tests still failing after retry. Check surefire-reports-run1 for original failures.")
+                        }
                     }
                 }
             }
-        }
+}
     }
 
     post {
