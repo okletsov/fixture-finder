@@ -54,19 +54,26 @@ pipeline {
 
                     if (result != 0) {
                         currentBuild.displayName = "#${env.BUILD_NUMBER} (R)"
-
-                        // Save first run's reports before retry overwrites them
                         sh 'cp -r target/surefire-reports target/surefire-reports-run1 || true'
 
-                        def retryResult = sh(
+                        // Extract failed test names from testng-failed.xml and strip "(failed)" suffix
+                        def failedTests = sh(
                             script: '''
-                                echo "Cycling VPN connection for retry..."
+                                grep -oP '(?<=name=")[^"]+(?=\\(failed\\)")' target/surefire-reports/testng-failed.xml | paste -sd ',' -
+                            ''',
+                            returnStdout: true
+                        ).trim()
+
+                        echo "Retrying failed tests: ${failedTests}"
+
+                        def retryResult = sh(
+                            script: """
                                 sudo wg-quick down wg0 || true
                                 sleep 2
                                 sudo wg-quick up wg0
                                 sleep 3
-                                /usr/bin/mvn test -DsuiteXmlFile=target/surefire-reports/testng-failed.xml
-                            ''',
+                                /usr/bin/mvn test -DsuiteXmlFile=testng.xml -Dtestnames="${failedTests}"
+                            """,
                             returnStatus: true
                         )
 
@@ -76,13 +83,13 @@ pipeline {
                     }
                 }
             }
-}
+        }
     }
 
     post {
         always {
             sh 'sudo wg-quick down wg0 || true'
-            archiveArtifacts artifacts: 'logs/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'logs/**, target/surefire-reports*/**', allowEmptyArchive: true
         }
     }
 }
