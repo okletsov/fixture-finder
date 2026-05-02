@@ -5,21 +5,21 @@
         <listener class-name="genericHelpers.TestFailureListener"/>
     </listeners>
 
-    <test name="Process Today">
+    <test name="ProcessToday">
         <parameter name="day" value="today"/>
         <classes>
             <class name="tests.Test_ProcessDay"/>
         </classes>
     </test>
 
-    <test name="Process Tomorrow">
+    <test name="ProcessTomorrow">
         <parameter name="day" value="tomorrow"/>
         <classes>
             <class name="tests.Test_ProcessDay"/>
         </classes>
     </test>
 
-    <test name="Update Result">
+    <test name="UpdateResult">
         <classes>
             <class name="tests.Test_UpdateResults"/>
         </classes>
