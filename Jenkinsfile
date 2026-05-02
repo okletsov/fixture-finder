@@ -89,7 +89,7 @@ pipeline {
     post {
         always {
             sh 'sudo wg-quick down wg0 || true'
-            archiveArtifacts artifacts: 'logs/**, target/surefire-reports*/**', allowEmptyArchive: true
+            archiveArtifacts artifacts: 'logs/**, target/surefire-reports*/testng-failed.xml, target/surefire-reports*/index.html', allowEmptyArchive: true
         }
     }
 }
