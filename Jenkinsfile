@@ -72,7 +72,7 @@ pipeline {
                                 sleep 2
                                 sudo wg-quick up wg0
                                 sleep 3
-                                /usr/bin/mvn test -DsuiteXmlFile=testng.xml -Dtestnames="${failedTests}"
+                                /usr/bin/mvn test -DretryTests="${failedTests}"
                             """,
                             returnStatus: true
                         )

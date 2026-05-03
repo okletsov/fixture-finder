@@ -3,6 +3,7 @@
 <suite name="Main Suite" verbose="1" parallel="false">
     <listeners>
         <listener class-name="genericHelpers.TestFailureListener"/>
+        <listener class-name="genericHelpers.RetryFilterListener"/>
     </listeners>
 
     <test name="ProcessToday">
