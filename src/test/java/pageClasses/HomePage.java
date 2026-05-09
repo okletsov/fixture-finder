@@ -154,7 +154,7 @@ public class HomePage {
 
 //            Skipping to the next event if odds for current event don't exist
             List<WebElement> eventOdds = el.findElements(By.xpath(".//*[@data-oid][1]//button"));
-            if (eventOdds.isEmpty()) {continue; }
+            if (eventOdds.isEmpty() || eventOdds.size() != 3) {continue; }
 
 //            Inspecting homeOdds
             BigDecimal homeOdds = new BigDecimal(el.findElement(By.xpath(".//*[@data-oid][1]//button")).getText());
