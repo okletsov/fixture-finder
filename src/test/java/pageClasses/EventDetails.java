@@ -284,6 +284,12 @@ public class EventDetails {
             return false;
         }
 
+//        Checking if odds for the event exist
+        if (getOddsByEvent(events.get(0)).isEmpty()) {
+            Log.info("Phase 2 evaluation failed: odds for the last h2h game don't exist\n");
+            return false;
+        }
+
 //        Checking if that game was within last year
         String eventDateString = getEventDateByEvent(events.get(0));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -293,12 +299,6 @@ public class EventDetails {
 
         if (lastAwayEventDate.isBefore(oneYearAgo)) {
             Log.info(" Phase 2 evaluation failed: last away h2h game for " + homeTeamName + "was more than a year ago\n");
-            return false;
-        }
-
-//        Checking if odds for the event exist
-        if (getOddsByEvent(events.get(0)).isEmpty()) {
-            Log.info("Phase 2 evaluation failed: odds for the last h2h game don't exist\n");
             return false;
         }
 
